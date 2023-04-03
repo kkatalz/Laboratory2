@@ -12,6 +12,9 @@ public class NonFoodGroupOfGoods {
         this.description=description;
     }
 
+    public NonFoodGroupOfGoods(){//порожній масив для створення нового товару користувачем
+        this.nonFoodGroup=new Goods[0];
+    }
 
     //return global items
     public String getName(){

@@ -40,8 +40,8 @@ public class Main {
                 new Goods("шампунь", "для волосся з посіченими кінчиками", "Garnier", 40, 180),
         }, "Усе для дому", "Найпотрібніше після важкого дня");
 
-        foodGroupOfCereals.writeFoodGroup();
-           nonFoodGroupOfHomely.writeNonFoodGroup();
+
+
         Interaction interactionWithUser=new Interaction();
     interactionWithUser.setVisible(true);
     }

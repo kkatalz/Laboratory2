@@ -1,3 +1,5 @@
+import java.io.Serializable;
+
 //Клас :  товари. Властивості - назва, опис, виробник, кількість на складі, ціна за одиницю.
 public class Goods {
     String name;
@@ -34,4 +36,6 @@ public class Goods {
     public double getPrice(){
         return price;
     }
+
+
 }

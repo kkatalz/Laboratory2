@@ -1,4 +1,3 @@
-import javax.swing.*;
 //                                   Робота невеликого підприємства по роботі зі складом
 //TODO 0.Існує декілька груп товарів (наприклад: Продовольчі, непродовольчі...). У кожній групі товарів існують конкретні
 // товари (наприклад: борошно, гречка ...).Група товарів містить наступні властивості - назва, опис. У кожного товару є
@@ -41,7 +40,8 @@ public class Main {
                 new Goods("шампунь", "для волосся з посіченими кінчиками", "Garnier", 40, 180),
         }, "Усе для дому", "Найпотрібніше після важкого дня");
 
-
+        foodGroupOfCereals.writeFoodGroup();
+           nonFoodGroupOfHomely.writeNonFoodGroup();
         Interaction interactionWithUser=new Interaction();
     interactionWithUser.setVisible(true);
     }

@@ -1,3 +1,6 @@
+import java.io.FileWriter;
+import java.io.IOException;
+
 //Клас : непродовольча група товарів. Властивості - назва, опис.
 public class NonFoodGroupOfGoods {
 
@@ -27,6 +30,25 @@ public class NonFoodGroupOfGoods {
 
     public Goods[] getNonFoodGroup() {
         return nonFoodGroup;
+    }
+
+    public void writeNonFoodGroup(){
+        try{
+            // the path of the file must be changed depending on the user
+            FileWriter fw = new FileWriter("/home/liza/IdeaProjects/Laboratory2/NonFoodGroup.txt");
+            String s;
+            fw.write("Непродовольчі товари: ");
+            fw.write(System.getProperty( "line.separator" ));
+            for (Goods goods : nonFoodGroup) {
+                s = "Назва: " + goods.getName() + ". Опис: " + goods.getDescription() + ". Виробник: " + goods.getMaker() +
+                        ". Кількість на складі: " + goods.getAmountOnStock() + ". Ціна: " + goods.getPrice();
+                fw.write(s);
+                fw.write(System.getProperty("line.separator"));
+            }
+            fw.close();
+        } catch (IOException e){
+            System.out.println(e);
+        }
     }
 }
 

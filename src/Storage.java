@@ -1,6 +1,10 @@
 import java.io.FileWriter;
 import java.io.IOException;
 
+import static java.util.Arrays.binarySearch;
+import static java.util.Arrays.copyOf;
+
+//містить масив груп
 public class Storage {
     Group[] groups;
 
@@ -30,4 +34,46 @@ public class Storage {
             System.out.println(e);
         }
     }
+
+
+    //ПУНКТ 5
+    // додавання групи
+    public void addGroup(String name, String description) {
+        this.groups = copyOf(this.groups, this.groups.length + 1);
+        this.groups[this.groups.length - 1] = new Group(name, description);
+        System.out.println("Додаємо групу " + this.groups[this.groups.length - 1]);
+        int numberOfGroups = groups.length;
+
+    }
+
+    //редагування групи
+    public void editGroup(int whichGroupToChange, String name, String description) {
+        Group pastGroup;
+
+        for (int i = 0; i < this.groups.length; i++) {
+            if (i == whichGroupToChange) {
+                pastGroup = this.groups[i];
+                pastGroup.setName(name);
+                pastGroup.setDescription(description);
+            }
+        }
+    }
+
+    //видалення групи
+    public void deleteGroup(int whichGroupToDelete) {
+
+        Group[] newGroup = new Group[this.groups.length-1];
+
+        for (int i = 0, k = 0; i < this.groups.length; i++) {
+            if(i!=whichGroupToDelete){
+                newGroup[k] = groups[i];
+                k++;
+            }
+        }
+
+        this.groups = newGroup;
+
+
+    }
+
 }

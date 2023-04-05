@@ -22,20 +22,39 @@ public class Goods {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getDescription(){
         return description;
     }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public String getMaker(){
         return maker;
+    }
+
+    public void setMaker(String maker) {
+        this.maker = maker;
     }
 
     public int getAmountOnStock(){
         return amountOnStock;
     }
 
+    public void setAmountOnStock(int amountOnStock) {
+        this.amountOnStock = amountOnStock;
+    }
+
     public double getPrice(){
         return price;
     }
 
-
+    public void setPrice(double price) {
+        this.price = price;
+    }
 }

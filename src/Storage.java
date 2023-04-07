@@ -74,6 +74,7 @@ public class Storage {
         }
 
         this.groups = newGroup;
+        System.out.println(Arrays.toString(this.groups));
 
 
     }

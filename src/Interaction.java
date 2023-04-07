@@ -6,7 +6,7 @@ import java.awt.event.ActionListener;
 
 public class Interaction extends JFrame implements ActionListener {
     JButton OKButton, CancelButton, availableDataButton, newDataButton,makeGroup,addGood, BACK, buttonEditGroup,
-            buttonEditGoods, buttonDeleteGroup, buttonDeleteGoods,nextToEditGroup, buttonAssignGroup;
+            buttonEditGoods, buttonDeleteGroup, buttonDeleteGoods,nextToEditGroup, buttonAssignGroup, buttonNextToDeleteGroup;
     JLabel nameLabel, startLabel, whichGroup,whatTo, questionInEdit;
     JPanel mainPanel, buttonPanel,buttonPanelData,panelInteractionWithNewData,buttonPanelNewData,  panelInteractionWithAvailableData,
     buttonPanelAvailableData, buttonPanelInEdit;
@@ -22,6 +22,12 @@ public class Interaction extends JFrame implements ActionListener {
 
     public Interaction(Storage storage) {
         this.storage = storage;
+
+        // for test
+        storage.addGroup("їжа", "поїсти");
+        storage.addGroup("одяг", "носити");
+        storage.addGroup("кава", "пити");
+        storage.addGroup("взуття", "взувати");
 
         this.setTitle("Робота зі складом ");
         this.setSize(500, 400);
@@ -254,6 +260,46 @@ public class Interaction extends JFrame implements ActionListener {
 
             availableDataFrame.setVisible(true);
         }
+        // when button "видалити групу" is pressed
+        else if(event.getSource() == buttonDeleteGroup){
+            panelInteractionWithAvailableData.remove(buttonPanelAvailableData);
+            panelInteractionWithAvailableData.remove(labelTitle);
+
+            listOfGroups = new JTextArea(10, 40);
+            listOfGroups.setLineWrap(true);
+            listOfGroups.setWrapStyleWord(true);
+            scrollText = new JScrollPane(listOfGroups);
+
+            panelInteractionWithAvailableData.add(scrollText, BorderLayout.CENTER);
+
+            String s ="";
+            for(int i =0; i < storage.numberOfGroups(); i++) s +=  i + ")" + storage.getInfoAboutGroup(i) + "\n";
+            listOfGroups.setText(s);
+            ////////////////////////
+            whichGroup = new JLabel("Оберіть групу, яку бажаєте видалити: ");
+            whichGroup.setForeground(Color.white);
+            whichGroup.setFont(new Font("Georgia", Font.ITALIC, 18));
+            whichGroup.setHorizontalAlignment(JLabel.CENTER);
+            panelInteractionWithAvailableData.add(whichGroup);
+
+            SpinnerModel value = new SpinnerNumberModel(0, 0, storage.numberOfGroups() -1, 1);
+            spinnerOfGroup = new JSpinner(value);
+            panelInteractionWithAvailableData.add(spinnerOfGroup, BorderLayout.CENTER);
+
+            buttonNextToDeleteGroup = new JButton("Видалити");
+            buttonNextToDeleteGroup.addActionListener(this);
+            panelInteractionWithAvailableData.add(buttonNextToDeleteGroup);
+
+
+            SwingUtilities.updateComponentTreeUI(availableDataFrame);
+
+        } else if(event.getSource() == buttonNextToDeleteGroup){
+            numberOfGroup = (Integer) spinnerOfGroup.getValue();
+            storage.deleteGroup(numberOfGroup);
+            availableDataFrame.setVisible(false);
+            newFrame.setVisible(true);
+
+        }
 
         // actions when button "редагувати групу" is pressed
         else if(event.getSource() == buttonEditGroup){
@@ -264,11 +310,7 @@ public class Interaction extends JFrame implements ActionListener {
             panelInteractionWithAvailableData.remove(buttonPanelAvailableData);
             panelInteractionWithAvailableData.remove(labelTitle);
 
-            // for test
-            storage.addGroup("їжа", "поїсти");
-            storage.addGroup("одяг", "носити");
-            storage.addGroup("кава", "пити");
-            storage.addGroup("взуття", "взувати");
+
 
             listOfGroups = new JTextArea(10, 40);
             listOfGroups.setLineWrap(true);

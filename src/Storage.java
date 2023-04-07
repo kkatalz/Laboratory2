@@ -1,5 +1,6 @@
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Arrays;
 
 import static java.util.Arrays.binarySearch;
 import static java.util.Arrays.copyOf;
@@ -57,6 +58,7 @@ public class Storage {
                 pastGroup.setDescription(description);
             }
         }
+        System.out.println(Arrays.toString(this.groups));
     }
 
     //видалення групи
@@ -74,6 +76,23 @@ public class Storage {
         this.groups = newGroup;
 
 
+    }
+    // to return information about concrete group
+    public String getInfoAboutGroup(int i){
+       String s;
+       s = "Назва: " + this.groups[i].getName() + ". " + "Опис: " + this.groups[i].getDescription() + ". ";
+       return s;
+    }
+
+    public String getDescOfGroup(int index){
+        return this.groups[index].getDescription();
+    }
+
+    public String getNameOfGroup(int index){
+        return this.groups[index].getName();
+    }
+    public int numberOfGroups(){
+        return this.groups.length;
     }
 
 }

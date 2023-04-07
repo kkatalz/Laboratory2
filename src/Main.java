@@ -45,8 +45,6 @@ public class Main {
 
 
 
-        Interaction interactionWithUser=new Interaction();
-    interactionWithUser.setVisible(true);
 
     //check if works
         nonFoodGroupOfHomely.addGoodsToGroup("світер", "англійський", "Zara", 14, 2_500);
@@ -57,5 +55,8 @@ for(Goods good:nonFoodGroupOfHomely.getGoods()){
 
 Storage workWithGroup=new Storage();
 workWithGroup.addGroup("nonFoodGroupOfHomely","vfvfv");
+        Interaction interactionWithUser=new Interaction(workWithGroup);
+        interactionWithUser.setVisible(true);
+
     }
 }

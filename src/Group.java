@@ -91,6 +91,10 @@ public class Group {
         this.goods = newGoods;
 
     }
+    public int getNumberOfGoods(){
+
+        return this.goods.length;
+    }
     public String toString(){
         return this.name + this.description;
     }

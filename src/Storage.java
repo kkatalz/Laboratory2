@@ -72,8 +72,8 @@ public class Storage {
                 k++;
             }
         }
-
         this.groups = newGroup;
+
         System.out.println(Arrays.toString(this.groups));
 
 

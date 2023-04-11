@@ -18,6 +18,8 @@ public class Group {
     Group(String name, String description){
         this.name = name;
         this.description = description;
+        goods = new Goods[0];
+
     }
 
     public String getName(){
@@ -49,6 +51,9 @@ public class Group {
         }
 
 
+        public Goods getGood(int index){
+        return this.goods[index];
+        }
 
     //ПУНКТ 6
     // додавання товарів до групи
@@ -91,13 +96,23 @@ public class Group {
         this.goods = newGoods;
 
     }
-    public int getNumberOfGoods(){
 
-        return this.goods.length;
+  // get an array with name of each good
+    public String[] getNamesOfGoods(){
+        String[] str = new String[this.goods.length];
+        for(int i =0; i < this.goods.length; i++){
+            str[i] = this.goods[i].getName();
+        }
+        return str;
     }
     public String toString(){
         return this.name + this.description;
     }
+
+    public int getNumberOfGoodsInGroup(){
+        return this.goods.length;
+    }
+
 
 }
 

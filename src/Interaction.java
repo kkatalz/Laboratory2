@@ -5,21 +5,23 @@ import java.awt.event.ActionListener;
 //TODO другий екран -2 кнопки: робота з новими даними й старими
 
 public class Interaction extends JFrame implements ActionListener {
-    JButton OKButton, CancelButton, availableDataButton, newDataButton, makeGroup, addGood, BACK, buttonEditGroup,
+    JButton StartButton, CancelButton, availableDataButton, newDataButton, makeGroup, addGood, BACK, buttonEditGroup, OKadd,
             buttonEditGoods, buttonDeleteGroup, buttonDeleteGoods, buttonNextToEditGroupToDesc,
             buttonNextToEditNameOfGroup, buttonAssignGroup, buttonNextToDeleteGroup, buttonToChangeNameOgGroup,
             buttonToChooseGroupInEditingGoods, buttonToEditSpecifiedGood, buttonToChooseParametrOfProductL;
     JLabel nameLabel, startLabel, whichGroup, questionInEdit, questionInEditToChangeNameOfGroup, labelInfoAboutGoods;
     JPanel mainPanel, buttonPanel, buttonPanelData, panelInteractionWithNewData, buttonPanelNewData, panelInteractionWithAvailableData,
-            buttonPanelAvailableData, buttonPanelInEdit;
+            buttonPanelAvailableData, buttonPanelInEdit, buttonPanelForBack;
     JFrame newFrame, thirdFrame, makeGroupFrame, addGoodFrame, availableDataFrame;
     JSpinner spinnerOfGroup, whatToChange;
     JTextArea listOfGroups;
     JTextArea newNameOrDescOfGroup;
     int numberOfGroup, whatToChangeInEdit;
+    JTextField nameField, descriptionField;
 
     JLabel labelTitle;
     JScrollPane scrollText;
+    boolean isShowAvailable = true;
     JRadioButton[] radioButtonsToChooseGroupInEditingGoods, radioButtonsToChooseGoodsInEditingGoods, radioButtonsToChooseParametr;
     private Storage storage;
     private int indexOfGroup, indexOfProduct;
@@ -27,8 +29,7 @@ public class Interaction extends JFrame implements ActionListener {
 
     public Interaction(Storage storage) {
         this.storage = storage;
-
-        // for test
+// for test
         storage.addGroup("їжа", "поїсти");
         storage.addGroup("одяг", "носити");
         storage.addGroup("кава", "пити");
@@ -41,8 +42,6 @@ public class Interaction extends JFrame implements ActionListener {
         storage.getGroup(2).addGoodsToGroup("Куртка", "Україна", "Нова", 90, 900);
 
         storage.getGroup(3).addGoodsToGroup("jacobs", "Україна", "міцна", 6, 5);
-
-        storage.getGroup(4).addGoodsToGroup("Кросівки", "Україна", "Milana", 12, 600);
 
 
         //  storage.groups[1].addGoodsToGroup("гречка", "Україна", "Верес", 20, 30);
@@ -79,9 +78,9 @@ public class Interaction extends JFrame implements ActionListener {
         buttonPanel.setBackground(Color.black);
         this.add(buttonPanel, BorderLayout.SOUTH);
 
-        OKButton = new JButton("START");
-        buttonPanel.add(OKButton);
-        OKButton.addActionListener(this);
+        StartButton = new JButton("START");
+        buttonPanel.add(StartButton);
+        StartButton.addActionListener(this);
 
         CancelButton = new JButton("CANCEL");
         buttonPanel.add(CancelButton);
@@ -90,9 +89,54 @@ public class Interaction extends JFrame implements ActionListener {
 
     }
 
+
+    //відкриття панелі для роботи з даними
+    public void showData(String title) {
+//        if (storage.groups.length == 0 && title == "Робота з наявними даними") {
+//
+//        }
+        availableDataFrame = new JFrame(title);
+        availableDataFrame.setSize(500, 400);
+        availableDataFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        panelInteractionWithAvailableData = new JPanel();
+        panelInteractionWithAvailableData.setBackground(Color.BLACK);
+        panelInteractionWithAvailableData.setBorder(BorderFactory.createEmptyBorder(40, 0, 10, 0));
+        panelInteractionWithAvailableData.setLayout(new FlowLayout());
+        availableDataFrame.add(panelInteractionWithAvailableData);
+
+        labelTitle = new JLabel("<html> На даній сторінці ви можете редагувати <br>/видалити групу товарів або ж товар");
+        labelTitle.setForeground(Color.white);
+        labelTitle.setFont(new Font("Georgia", Font.ITALIC, 18));
+        labelTitle.setHorizontalAlignment(JLabel.CENTER);
+        panelInteractionWithAvailableData.add(labelTitle);
+
+        buttonPanelAvailableData = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 40));
+        buttonPanelAvailableData.setBackground(Color.black);
+        panelInteractionWithAvailableData.add(buttonPanelAvailableData, BorderLayout.SOUTH);
+
+        buttonEditGroup = new JButton("Редагувати групу");
+        buttonPanelAvailableData.add(buttonEditGroup, BorderLayout.CENTER);
+        buttonEditGroup.addActionListener(this);
+
+        buttonDeleteGroup = new JButton("Видалити групу");
+        buttonPanelAvailableData.add(buttonDeleteGroup, BorderLayout.CENTER);
+        buttonDeleteGroup.addActionListener(this);
+
+        buttonEditGoods = new JButton("Редагувати товар");
+        buttonPanelAvailableData.add(buttonEditGoods, BorderLayout.SOUTH);
+        buttonEditGoods.addActionListener(this);
+
+        buttonDeleteGoods = new JButton("Видалити товар");
+        buttonPanelAvailableData.add(buttonDeleteGoods, BorderLayout.SOUTH);
+        buttonDeleteGoods.addActionListener(this);
+
+        availableDataFrame.setVisible(true);
+    }
+
     public void actionPerformed(ActionEvent event) {
         //відкрити друге вікно
-        if (event.getSource() == OKButton) {
+        if (event.getSource() == StartButton) {
             this.setVisible(false);
             newFrame = new JFrame("Взаємодія з даними");
             newFrame.setSize(500, 400);
@@ -124,6 +168,14 @@ public class Interaction extends JFrame implements ActionListener {
             newDataButton = new JButton("створити нові");
             buttonPanelData.add(newDataButton, BorderLayout.CENTER);
             newDataButton.addActionListener(this);
+
+            buttonPanelForBack = new JPanel(new FlowLayout(FlowLayout.RIGHT, 300, 130));
+            buttonPanelForBack.setBackground(Color.black);
+            newPanel.add(buttonPanelForBack);
+
+            BACK = new JButton("BACK");
+            buttonPanelForBack.add(BACK, BorderLayout.SOUTH);
+            BACK.addActionListener(this);
 
             newFrame.setVisible(true);
 
@@ -191,13 +243,23 @@ public class Interaction extends JFrame implements ActionListener {
 
             nameLabel.setForeground(Color.white);
             descriptionLabel.setForeground(Color.white);
-            JTextField nameField = new JTextField(15);//видимий розмір
-            JTextField descriptionField = new JTextField(15);
+            nameField = new JTextField(15);//видимий розмір
+            descriptionField = new JTextField(15);
 
             panelInteractionWithNewData.add(nameLabel);
             panelInteractionWithNewData.add(descriptionLabel);
             panelInteractionWithNewData.add(nameField);
             panelInteractionWithNewData.add(descriptionField);
+
+
+            buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 60, 10));
+            buttonPanel.setBackground(Color.black);
+            panelInteractionWithNewData.add(buttonPanel, BorderLayout.SOUTH);
+
+            OKadd = new JButton("OK");
+            buttonPanel.add(OKadd);
+            OKadd.addActionListener(this);
+
 
             // Set GridBagConstraints for nameLabel
             GridBagConstraints gbc = new GridBagConstraints();
@@ -231,51 +293,24 @@ public class Interaction extends JFrame implements ActionListener {
             gbc.insets = new Insets(65, 5, 5, 5);
             panelInteractionWithNewData.add(descriptionField, gbc);
 
-
             makeGroupFrame.setVisible(true);
+
+            //кнопка ОК зберігає нові дані
+        } else if (event.getSource() == OKadd) {
+
+            //зберігаємо додані групи
+            String name = nameField.getText();
+            String description = descriptionField.getText();
+            storage.addGroup(name, description);
+
+            panelInteractionWithNewData.setVisible(false);
+            showData("Робота з оновленими даними");
         }
         // to work with already added groups and goods (to edit or delete)
         else if (event.getSource() == availableDataButton) {
             newFrame.setVisible(false);
 
-
-            availableDataFrame = new JFrame("Взаємодія з раніше введеними даними");
-            availableDataFrame.setSize(500, 400);
-            availableDataFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-            panelInteractionWithAvailableData = new JPanel();
-            panelInteractionWithAvailableData.setBackground(Color.BLACK);
-            panelInteractionWithAvailableData.setBorder(BorderFactory.createEmptyBorder(40, 0, 10, 0));
-            panelInteractionWithAvailableData.setLayout(new FlowLayout());
-            availableDataFrame.add(panelInteractionWithAvailableData);
-
-            labelTitle = new JLabel("<html> На даній сторінці ви можете редагувати/видалити групу товарів або ж товар");
-            labelTitle.setForeground(Color.white);
-            labelTitle.setFont(new Font("Georgia", Font.ITALIC, 18));
-            labelTitle.setHorizontalAlignment(JLabel.CENTER);
-            panelInteractionWithAvailableData.add(labelTitle);
-
-            buttonPanelAvailableData = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 40));
-            buttonPanelAvailableData.setBackground(Color.black);
-            panelInteractionWithAvailableData.add(buttonPanelAvailableData, BorderLayout.SOUTH);
-
-            buttonEditGroup = new JButton("Редагувати групу");
-            buttonPanelAvailableData.add(buttonEditGroup, BorderLayout.CENTER);
-            buttonEditGroup.addActionListener(this);
-
-            buttonDeleteGroup = new JButton("Видалити групу");
-            buttonPanelAvailableData.add(buttonDeleteGroup, BorderLayout.CENTER);
-            buttonDeleteGroup.addActionListener(this);
-
-            buttonEditGoods = new JButton("Редагувати товар");
-            buttonPanelAvailableData.add(buttonEditGoods, BorderLayout.SOUTH);
-            buttonEditGoods.addActionListener(this);
-
-            buttonDeleteGoods = new JButton("Видалити товар");
-            buttonPanelAvailableData.add(buttonDeleteGoods, BorderLayout.SOUTH);
-            buttonDeleteGoods.addActionListener(this);
-
-            availableDataFrame.setVisible(true);
+            showData("Робота з наявними даними");
         }
         // when button "видалити групу" is pressed
         else if (event.getSource() == buttonDeleteGroup) {
@@ -631,9 +666,12 @@ public class Interaction extends JFrame implements ActionListener {
             panelInteractionWithAvailableData.add(newInfo);
 
 
-
             SwingUtilities.updateComponentTreeUI(availableDataFrame);
 
+        } else if (event.getSource() == BACK) {
+            this.setVisible(false);
+            Interaction prevFrame = new Interaction(storage);
+            prevFrame.setVisible(true);
         }
     }
 

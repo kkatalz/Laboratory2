@@ -54,7 +54,7 @@ for(Goods good:nonFoodGroupOfHomely.getGoods()){
 }
 
 Storage workWithGroup=new Storage();
-workWithGroup.addGroup("nonFoodGroupOfHomely","vfvfv");
+
         Interaction interactionWithUser=new Interaction(workWithGroup);
         interactionWithUser.setVisible(true);
 

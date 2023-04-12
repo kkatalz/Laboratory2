@@ -511,10 +511,6 @@ public class Interaction extends JFrame implements ActionListener {
             String newName = newNameOrDescOfGroup.getText();
             storage.editGroup(numberOfGroup, newName, storage.getDescOfGroup(numberOfGroup));
 
-            panelInteractionWithAvailableData.remove(questionInEdit);
-            panelInteractionWithAvailableData.remove(questionInEditToChangeNameOfGroup);
-            panelInteractionWithAvailableData.remove(newNameOrDescOfGroup);
-            panelInteractionWithAvailableData.remove(buttonToChangeNameOgGroup);
 
             SwingUtilities.updateComponentTreeUI(availableDataFrame);
             availableDataFrame.setVisible(false);

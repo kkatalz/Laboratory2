@@ -47,7 +47,7 @@ public class Group {
         String s ="";
             for (Goods goods : this.goods) {
                 s += "Назва: " + goods.getName() + ". Опис: " + goods.getDescription() + ". Виробник: " + goods.getMaker() +
-                        ". Кількість на складі: " + goods.getAmountOnStock() + ". Ціна: " + goods.getPrice();
+                        ". Кількість на складі: " + goods.getAmountOnStock() + ". Ціна: " + goods.getPrice() + "\n";
             }
             return s;
         }

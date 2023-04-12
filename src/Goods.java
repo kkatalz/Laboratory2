@@ -35,7 +35,7 @@ public class Goods {
     }
 
     public String getMaker(){
-        return maker;
+        return this.maker;
     }
 
     public void setMaker(String maker) {
@@ -57,4 +57,10 @@ public class Goods {
     public void setPrice(double price) {
         this.price = price;
     }
+
+    public String toString(){
+        return "Назва: " + this.name + "Опис: " + this.description + " Виробник: " + this.maker + " Кількість : " + this.amountOnStock +
+                " Ціна : " + this.price;
+    }
+
 }

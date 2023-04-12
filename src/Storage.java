@@ -23,8 +23,8 @@ public class Storage {
             fw.write(System.getProperty("line.separator"));
             for (Group gr : groups) {
                 s = gr.getName();
-                fw.write(s);
-                fw.write("Усі товари даної групи: ");
+                fw.write("Група: " + s);
+                fw.write(". Усі товари даної групи: ");
                 s = gr.getInfo();
                 fw.write(System.getProperty("line.separator"));
                 fw.write(s);

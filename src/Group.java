@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 import static java.util.Arrays.copyOf;
 
 //містить масив товарів
@@ -79,6 +81,7 @@ public class Group {
 
             }
         }
+        System.out.println(Arrays.toString(this.goods));
     }
 
     //видалення товарів в групі
@@ -94,6 +97,11 @@ public class Group {
         }
 
         this.goods = newGoods;
+    }
+
+    // to delete all goods in a group
+    public  void deleteAllGoodsInGroup(){
+        this.goods = null;
 
     }
 

@@ -6,25 +6,26 @@ import java.io.IOException;
 //TODO другий екран -2 кнопки: робота з новими даними й старими
 
 public class Interaction extends JFrame implements ActionListener {
-    JButton StartButton, CancelButton, availableDataButton, newDataButton, makeGroup, addGood, BACK, buttonEditGroup, OKadd,
-            buttonEditGoods, buttonDeleteGroup, buttonDeleteGoods, buttonNextToEditGroupToDesc,
+    JButton StartButton, CancelButton, availableDataButton, newDataButton, makeGroup, addGood, BACK, buttonEditGroup, Submit,
+            buttonEditGoods, buttonDeleteGroup, buttonDeleteGoods, buttonNextToEditGroupToDesc,buttonToChooseGroupInAdditionGoods,
             buttonNextToEditNameOfGroup, buttonAssignGroup, buttonNextToDeleteGroup, buttonToChangeNameOgGroup,
             buttonToChooseGroupInEditingGoods, buttonToEditSpecifiedGood, buttonToChooseParametrOfProductL,
+            SubmitGood,
             buttonToFinishEditingGoodsL, buttonToWriteInfoInFile;
     JLabel nameLabel, startLabel, whichGroup, questionInEdit, questionInEditToChangeNameOfGroup, labelInfoAboutGoods;
     JPanel mainPanel, buttonPanel, buttonPanelData, panelInteractionWithNewData, buttonPanelNewData, panelInteractionWithAvailableData,
-            buttonPanelAvailableData, buttonPanelInEdit, buttonPanelForBack, panelInProcess, panelInProcess2;
-    JFrame newFrame, thirdFrame, makeGroupFrame, addGoodFrame, availableDataFrame;
+            buttonPanelAvailableData, buttonPanelInEdit, buttonPanelForBack, panelInProcess, panelInProcess2, panelInteractionWithNewGood;
+    JFrame newFrame, thirdFrame, makeGroupFrame, addGoodFrame, availableDataFrame,makeGoodFrame,makeNewGoodFrame;
     JSpinner spinnerOfGroup, whatToChange;
     JTextArea listOfGroups;
     JTextArea newNameOrDescOfGroup;
     int numberOfGroup, indexOfParametr;
-    JTextField nameField, descriptionField, newParametrInEditingGoods;
+    JTextField nameField, descriptionField, newParametrInEditingGoods, factureField, priceField,amountOnStockField;
 
     JLabel labelTitle;
     JScrollPane scrollText;
     boolean isShowAvailable = true;
-    JRadioButton[] radioButtonsToChooseGroupInEditingGoods, radioButtonsToChooseGoodsInEditingGoods, radioButtonsToChooseParametr;
+    JRadioButton[] radioButtonsToChooseGroupInEditingGoods, radioButtonsToChooseGoodsInEditingGoods, radioButtonsToChooseParametr,radioButtonsToChooseGroupInAdditionGoods;
     private Storage storage;
     private int indexOfGroup, indexOfProduct;
 
@@ -279,9 +280,9 @@ public class Interaction extends JFrame implements ActionListener {
             buttonPanel.setBackground(Color.black);
             panelInteractionWithNewData.add(buttonPanel, BorderLayout.SOUTH);
 
-            OKadd = new JButton("OK");
-            buttonPanel.add(OKadd);
-            OKadd.addActionListener(this);
+            Submit = new JButton("OK");
+            buttonPanel.add(Submit);
+            Submit.addActionListener(this);
 
 
             // Set GridBagConstraints for nameLabel
@@ -318,8 +319,9 @@ public class Interaction extends JFrame implements ActionListener {
 
             makeGroupFrame.setVisible(true);
 
-            //кнопка ОК зберігає нові дані
-        } else if (event.getSource() == OKadd) {
+
+        }//кнопка ОК зберігає нові дані
+     else if (event.getSource() == Submit) {
 
             //зберігаємо додані групи
             String name = nameField.getText();
@@ -328,9 +330,115 @@ public class Interaction extends JFrame implements ActionListener {
 
             panelInteractionWithNewData.setVisible(false);
             showData("Робота з оновленими даними");
-        }
-        // to work with already added groups and goods (to edit or delete)
-        else if (event.getSource() == availableDataButton) {
+
+
+            // кнопка додати товар
+        }else if (event.getSource() == addGood) {
+
+            thirdFrame.setVisible(false);
+
+            makeNewGoodFrame = new JFrame("Обрати групу");
+            makeNewGoodFrame.setSize(500, 400);
+            makeNewGoodFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+            panelInteractionWithNewGood = new JPanel();
+            panelInteractionWithNewGood.setBackground(Color.BLACK);
+            panelInteractionWithNewGood.setBorder(BorderFactory.createEmptyBorder(55, 0, 10, 0));
+            makeNewGoodFrame.add(panelInteractionWithNewGood);
+
+                ButtonGroup bg = new ButtonGroup();
+
+                // додати вибір групи для користувача
+                radioButtonsToChooseGroupInAdditionGoods = new JRadioButton[storage.numberOfGroups()];
+                for (int i = 0; i < storage.numberOfGroups(); i++) {
+                    radioButtonsToChooseGroupInAdditionGoods[i] = new JRadioButton(storage.getNameOfGroup(i));
+                    panelInteractionWithNewGood.add(radioButtonsToChooseGroupInAdditionGoods[i], BorderLayout.CENTER);
+                    bg.add(radioButtonsToChooseGroupInAdditionGoods[i]);
+                }
+
+                // додати кнопку аби користувач підтвердив групу, в якій хоче поредагувати товар
+                buttonToChooseGroupInAdditionGoods = new JButton("Обрати групу");
+            buttonToChooseGroupInAdditionGoods.addActionListener(this);
+            panelInteractionWithNewGood.add(buttonToChooseGroupInAdditionGoods, BorderLayout.CENTER);
+
+               SwingUtilities.updateComponentTreeUI(makeNewGoodFrame);
+            makeNewGoodFrame.setVisible(true);
+
+        //додати товар до групи
+     }else if(event.getSource()==buttonToChooseGroupInAdditionGoods) {
+
+            makeNewGoodFrame.setVisible(false);
+
+            makeGoodFrame = new JFrame("Додати товар до групи");
+            makeGoodFrame.setSize(500, 400);
+            makeGoodFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+            panelInteractionWithNewData = new JPanel();
+            panelInteractionWithNewData.setBackground(Color.BLACK);
+            panelInteractionWithNewData.setBorder(BorderFactory.createEmptyBorder(55, 0, 10, 0));
+            makeGoodFrame.add(panelInteractionWithNewData);
+
+            JLabel newLabel = new JLabel("<html> Введіть назву, опис, виробника, кількість<br> на складі й ціну за одиницю товара");
+            newLabel.setForeground(Color.white);
+            newLabel.setFont(new Font("Georgia", Font.ITALIC, 18));
+            newLabel.setHorizontalAlignment(JLabel.CENTER);
+            panelInteractionWithNewData.add(newLabel);
+
+            JLabel nameLabel = new JLabel("Ім'я:");
+            JLabel descriptionLabel = new JLabel("Опис:");
+            JLabel factureLabel = new JLabel("Виробник:");
+            JLabel amountOnStockLabel = new JLabel("Кількість:");
+            JLabel priceLabel = new JLabel("Ціна:");
+
+
+            nameLabel.setForeground(Color.white);
+            descriptionLabel.setForeground(Color.white);
+            factureLabel.setForeground(Color.white);
+            amountOnStockLabel.setForeground(Color.white);
+            priceLabel.setForeground(Color.white);
+            nameField = new JTextField(15);
+            descriptionField = new JTextField(15);
+            factureField = new JTextField(15);
+            amountOnStockField = new JTextField(15);
+            priceField = new JTextField(15);
+
+            panelInteractionWithNewData.add(nameLabel);
+            panelInteractionWithNewData.add(nameField);
+            panelInteractionWithNewData.add(descriptionLabel);
+            panelInteractionWithNewData.add(descriptionField);
+            panelInteractionWithNewData.add(factureLabel);
+            panelInteractionWithNewData.add(factureField);
+            panelInteractionWithNewData.add(amountOnStockLabel);
+            panelInteractionWithNewData.add(amountOnStockField);
+            panelInteractionWithNewData.add(priceLabel);
+            panelInteractionWithNewData.add(priceField);
+
+
+            buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 60, 10));
+            buttonPanel.setBackground(Color.black);
+            panelInteractionWithNewData.add(buttonPanel, BorderLayout.SOUTH);
+
+            SubmitGood = new JButton("OK");
+            buttonPanel.add(SubmitGood);
+            SubmitGood.addActionListener(this);
+
+            makeGoodFrame.setVisible(true);
+
+
+        }else if(event.getSource()==SubmitGood){
+            makeGoodFrame.setVisible(false);
+            for (int i = 0; i < storage.numberOfGroups(); i++) {
+                if (radioButtonsToChooseGroupInAdditionGoods[i].isSelected()) {
+                    storage.getGroup(i).addGoodsToGroup(nameField.getText(), descriptionField.getText(), factureField.getText(), Integer.parseInt(amountOnStockField.getText()), Double.parseDouble(priceField.getText()));
+                }
+
+            }
+            showData("Робота з оновленими даними");
+
+
+
+            // to work with already added groups and goods (to edit or delete)
+        } else if (event.getSource() == availableDataButton) {
             newFrame.setVisible(false);
 
             showData("Робота з наявними даними");

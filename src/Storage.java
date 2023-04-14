@@ -1,3 +1,5 @@
+import org.w3c.dom.ls.LSOutput;
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
@@ -103,6 +105,35 @@ public class Storage {
     // to get an array of goods names of specified group
     public String[] getNamesOfGoods(int indexOfGroup){
         return this.groups[indexOfGroup].getNamesOfGoods();
+    }
+
+    // перевірка чи назва товару унікальна (третій пункт)
+    // повертає false, якщо назва товару вже є і true якщо назва товару унікальна
+    public boolean searchForDuplicatesOfGoods(String nameOfGood){
+        for(int i =0; i < this.groups.length; i++){
+            for(int j = 0; j < this.groups[i].getNumberOfGoodsInGroup(); j++) {
+               if(this.groups[i].getGood(j).getName().equals(nameOfGood)) return false;
+            }
+        }
+        return true;
+    }
+    // знайти товар (восьмий пункт)
+    public String[] searchForGoods(String nameOfGoods){
+        String[] s = new String[4];
+        for(Group group : this.groups){
+            for(int j =0; j < group.getNumberOfGoodsInGroup(); j++){
+                if(group.getGood(j).getName().equals(nameOfGoods)) {
+                    s[0] = "Назва: " + group.getGood(j).getName();
+                    s[0] = s[0].replaceAll("null", "");
+                    s[1] = " Опис: " + group.getGood(j).getDescription();
+                    s[2] = " Виробник: "+ group.getGood(j).getMaker();
+                    s[3] = "Кількість: " +
+                            group.getGood(j).getAmountOnStock() + ". Ціна: " + group.getGood(j).getPrice();
+                }
+            }
+        }
+        System.out.println(Arrays.toString(s));
+        return s;
     }
 
 

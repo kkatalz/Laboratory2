@@ -1,8 +1,9 @@
+import org.w3c.dom.ls.LSOutput;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 //TODO другий екран -2 кнопки: робота з новими даними й старими
 
 public class Interaction extends JFrame implements ActionListener {
@@ -10,20 +11,19 @@ public class Interaction extends JFrame implements ActionListener {
             buttonEditGoods, buttonDeleteGroup, buttonDeleteGoods, buttonNextToEditGroupToDesc,buttonToChooseGroupInAdditionGoods,
             buttonNextToEditNameOfGroup, buttonAssignGroup, buttonNextToDeleteGroup, buttonToChangeNameOgGroup,
             buttonToChooseGroupInEditingGoods, buttonToEditSpecifiedGood, buttonToChooseParametrOfProductL,
-            SubmitGood, buttonToDeleteGood,
-            buttonToFinishEditingGoodsL, buttonToWriteInfoInFile, buttonChooseGroupToDeleteGoods;
-    JLabel nameLabel, startLabel, whichGroup, questionInEdit, questionInEditToChangeNameOfGroup, labelInfoAboutGoods;
+            SubmitGood, buttonToDeleteGood, buttonSearchForGoods, buttonFinishSearching,
+            buttonToFinishEditingGoodsL, buttonToWriteInfoInFile, buttonChooseGroupToDeleteGoods, buttonSearchForGoodsWithEnteredData;
+    JLabel nameLabel, startLabel, whichGroup, questionInEdit, labelInfoAboutGoods, labelToFindGoodsByName;
+    JLabel[] labelWithGoodsInSearching;
     JPanel mainPanel, buttonPanel, buttonPanelData, panelInteractionWithNewData, buttonPanelNewData, panelInteractionWithAvailableData,
-            buttonPanelAvailableData, buttonPanelInEdit, buttonPanelForBack, panelInProcess, panelInProcess2, panelInteractionWithNewGood;
+            buttonPanelAvailableData, buttonPanelInEdit, buttonPanelForBack, panelInProcess, panelInProcess2, panelInteractionWithNewGood,
+            panelToSearchForGoods;
     JFrame newFrame, thirdFrame, makeGroupFrame, addGoodFrame, availableDataFrame,makeGoodFrame,makeNewGoodFrame;
-    JSpinner spinnerOfGroup;
-    JTextArea listOfGroups;
-    JTextField newNameOrDescOfGroup;
-    int numberOfGroup, indexOfParametr;
+    JTextField newNameOrDescOfGroup, textFieldSearchGoods;
+    int  indexOfParametr;
     JTextField nameField, descriptionField, newParametrInEditingGoods, factureField, priceField,amountOnStockField;
 
     JLabel labelTitle;
-    JScrollPane scrollText;
     boolean isShowAvailable = true;
     JRadioButton[] radioButtonsToChooseGroupInEditingGoods, radioButtonsToChooseGoodsInEditingGoods,
             radioButtonsToChooseParametr,radioButtonsToChooseGroupInAdditionGoods, radioButtonsChooseGroupInEditingGroup;
@@ -185,7 +185,6 @@ public class Interaction extends JFrame implements ActionListener {
             buttonPanelData.add(newDataButton, BorderLayout.CENTER);
             newDataButton.addActionListener(this);
 
-            // new
             JPanel myPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10));
             myPanel.setBackground(Color.black);
             newPanel.add(myPanel);
@@ -193,6 +192,10 @@ public class Interaction extends JFrame implements ActionListener {
             buttonToWriteInfoInFile = new JButton("Записати дані до файлу");
             myPanel.add(buttonToWriteInfoInFile, BorderLayout.SOUTH);
             buttonToWriteInfoInFile.addActionListener(this);
+
+            buttonSearchForGoods = new JButton("Пошук товару");
+            myPanel.add(buttonSearchForGoods, BorderLayout.SOUTH);
+            buttonSearchForGoods.addActionListener(this);
 
             buttonPanelForBack = new JPanel(new FlowLayout(FlowLayout.RIGHT, 300, 60));
             buttonPanelForBack.setBackground(Color.black);
@@ -946,8 +949,10 @@ public class Interaction extends JFrame implements ActionListener {
 
 
             String str = newParametrInEditingGoods.getText();
-
-            if(indexOfParametr == 0){ // name
+            if(indexOfParametr == 0 && !storage.searchForDuplicatesOfGoods(str)){
+                JOptionPane.showMessageDialog(this, "Неможливо змінити назву товару, оскільки товар з такою назвою вже є.");
+            }
+            if(indexOfParametr == 0 && storage.searchForDuplicatesOfGoods(str)){ // name
                 storage.getGroup(indexOfGroup).editGoodsInGroup(indexOfProduct, str,
                         storage.getGroup(indexOfGroup).getGood(indexOfProduct).getDescription(),
                         storage.getGroup(indexOfGroup).getGood(indexOfProduct).getMaker(),
@@ -1006,7 +1011,90 @@ public class Interaction extends JFrame implements ActionListener {
             storage.writeAllGroups();
             JOptionPane.showMessageDialog(this, "Дані було успішно записано до файлу.");
 
+        }
+        else if(event.getSource() == buttonSearchForGoods){
+            newFrame.setVisible(false);
+            availableDataFrame = new JFrame("Пошук товару");
+            availableDataFrame.setSize(500, 400);
+            availableDataFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+            panelToSearchForGoods = new JPanel();
+            panelToSearchForGoods.setBackground(Color.BLACK);
+            panelToSearchForGoods.setBorder(BorderFactory.createEmptyBorder(40, 0, 10, 0));
+            panelToSearchForGoods.setLayout(new FlowLayout());
+            availableDataFrame.add(panelToSearchForGoods);
+
+
+            labelToFindGoodsByName = new JLabel("Введіть назву товару: ");
+            labelToFindGoodsByName.setForeground(Color.white);
+            labelToFindGoodsByName.setFont(new Font("Georgia", Font.ITALIC, 18));
+            labelToFindGoodsByName.setHorizontalAlignment(JLabel.CENTER);
+
+            textFieldSearchGoods = new JTextField(15);
+
+            buttonSearchForGoodsWithEnteredData = new JButton("Шукати товар");
+            buttonSearchForGoodsWithEnteredData.addActionListener(this);
+
+
+            panelToSearchForGoods.add(labelToFindGoodsByName);
+            panelToSearchForGoods.add(textFieldSearchGoods);
+            panelToSearchForGoods.add(buttonSearchForGoodsWithEnteredData);
+            availableDataFrame.setVisible(true);
+        }
+
+        else if(event.getSource() == buttonSearchForGoodsWithEnteredData){
+
+            if(labelWithGoodsInSearching != null){
+                panelToSearchForGoods.remove(labelWithGoodsInSearching[0]);
+                panelToSearchForGoods.remove(labelWithGoodsInSearching[1]);
+                panelToSearchForGoods.remove(labelWithGoodsInSearching[2]);
+                panelToSearchForGoods.remove(labelWithGoodsInSearching[3]);
+                panelToSearchForGoods.remove(buttonFinishSearching);
+            }
+            String str = textFieldSearchGoods.getText();
+            String[] data;
+            data = storage.searchForGoods(str);
+
+            labelWithGoodsInSearching = new JLabel[4];
+
+            labelWithGoodsInSearching[0] = new JLabel(data[0]);
+            labelWithGoodsInSearching[0].setForeground(Color.white);
+            labelWithGoodsInSearching[0].setFont(new Font("Georgia", Font.ITALIC, 15));
+            labelWithGoodsInSearching[0].setHorizontalAlignment(JLabel.LEFT);
+
+            labelWithGoodsInSearching[1] = new JLabel(data[1]);
+            labelWithGoodsInSearching[1].setForeground(Color.white);
+            labelWithGoodsInSearching[1].setFont(new Font("Georgia", Font.ITALIC, 15));
+            labelWithGoodsInSearching[1].setHorizontalAlignment(JLabel.CENTER);
+
+            labelWithGoodsInSearching[2] = new JLabel(data[2]);
+            labelWithGoodsInSearching[2].setForeground(Color.white);
+            labelWithGoodsInSearching[2].setFont(new Font("Georgia", Font.ITALIC, 15));
+            labelWithGoodsInSearching[2].setHorizontalAlignment(JLabel.CENTER);
+
+            labelWithGoodsInSearching[3] = new JLabel(data[3]);
+            labelWithGoodsInSearching[3].setForeground(Color.white);
+            labelWithGoodsInSearching[3].setFont(new Font("Georgia", Font.ITALIC, 15));
+            labelWithGoodsInSearching[3].setHorizontalAlignment(JLabel.CENTER);
+
+            panelToSearchForGoods.add(labelWithGoodsInSearching[0]);
+            panelToSearchForGoods.add(labelWithGoodsInSearching[1]);
+            panelToSearchForGoods.add(labelWithGoodsInSearching[2]);
+            panelToSearchForGoods.add(labelWithGoodsInSearching[3]);
+
+
+            buttonFinishSearching = new JButton("Закінчити пошук");
+            buttonFinishSearching.addActionListener(this);
+            panelToSearchForGoods.add(buttonFinishSearching);
+
+            SwingUtilities.updateComponentTreeUI(availableDataFrame);
+
+
+        }
+
+        else if(event.getSource() == buttonFinishSearching){
+            availableDataFrame.setVisible(false);
+            newFrame.setVisible(true);
         }
     }
 

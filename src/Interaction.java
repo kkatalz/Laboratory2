@@ -10,41 +10,42 @@ public class Interaction extends JFrame implements ActionListener {
             buttonEditGoods, buttonDeleteGroup, buttonDeleteGoods, buttonNextToEditGroupToDesc,buttonToChooseGroupInAdditionGoods,
             buttonNextToEditNameOfGroup, buttonAssignGroup, buttonNextToDeleteGroup, buttonToChangeNameOgGroup,
             buttonToChooseGroupInEditingGoods, buttonToEditSpecifiedGood, buttonToChooseParametrOfProductL,
-            SubmitGood,
-            buttonToFinishEditingGoodsL, buttonToWriteInfoInFile;
+            SubmitGood, buttonToDeleteGood,
+            buttonToFinishEditingGoodsL, buttonToWriteInfoInFile, buttonChooseGroupToDeleteGoods;
     JLabel nameLabel, startLabel, whichGroup, questionInEdit, questionInEditToChangeNameOfGroup, labelInfoAboutGoods;
     JPanel mainPanel, buttonPanel, buttonPanelData, panelInteractionWithNewData, buttonPanelNewData, panelInteractionWithAvailableData,
             buttonPanelAvailableData, buttonPanelInEdit, buttonPanelForBack, panelInProcess, panelInProcess2, panelInteractionWithNewGood;
     JFrame newFrame, thirdFrame, makeGroupFrame, addGoodFrame, availableDataFrame,makeGoodFrame,makeNewGoodFrame;
-    JSpinner spinnerOfGroup, whatToChange;
+    JSpinner spinnerOfGroup;
     JTextArea listOfGroups;
-    JTextArea newNameOrDescOfGroup;
+    JTextField newNameOrDescOfGroup;
     int numberOfGroup, indexOfParametr;
     JTextField nameField, descriptionField, newParametrInEditingGoods, factureField, priceField,amountOnStockField;
 
     JLabel labelTitle;
     JScrollPane scrollText;
     boolean isShowAvailable = true;
-    JRadioButton[] radioButtonsToChooseGroupInEditingGoods, radioButtonsToChooseGoodsInEditingGoods, radioButtonsToChooseParametr,radioButtonsToChooseGroupInAdditionGoods;
+    JRadioButton[] radioButtonsToChooseGroupInEditingGoods, radioButtonsToChooseGoodsInEditingGoods,
+            radioButtonsToChooseParametr,radioButtonsToChooseGroupInAdditionGoods, radioButtonsChooseGroupInEditingGroup;
     private Storage storage;
     private int indexOfGroup, indexOfProduct;
 
 
     public Interaction(Storage storage) {
         this.storage = storage;
-// for test
-        storage.addGroup("їжа", "поїсти");
+
+        storage.addGroup("Їжа", "поїсти");
         storage.addGroup("одяг", "носити");
         storage.addGroup("кава", "пити");
         storage.addGroup("Взуття", "Спортивне");
 
         storage.getGroup(0).addGoodsToGroup("Гречка", "Україна", "Верес", 20, 30);
         storage.getGroup(0).addGoodsToGroup("Хліб", "Україна", "Київхліб", 10, 24);
-        storage.getGroup(0).addGoodsToGroup("Молоко", "Україна", "Яготинське", 90, 33);
-        storage.getGroup(1).addGoodsToGroup("Джинси", "Україна", "Нові", 200, 800);
-        storage.getGroup(1).addGoodsToGroup("Куртка", "Україна", "Нова", 90, 900);
+        storage.getGroup(0).addGoodsToGroup("Молоко", "знежирене", "Яготинське", 90, 33);
+        storage.getGroup(1).addGoodsToGroup("Джинси", "mom fit", "Bershka", 200, 800);
+        storage.getGroup(1).addGoodsToGroup("Куртка", "Україна", "Zara", 90, 900);
 
-        storage.getGroup(2).addGoodsToGroup("jacobs", "Україна", "міцна", 6, 5);
+        storage.getGroup(2).addGoodsToGroup("Lavazza", "Україна", "міцна", 6, 5);
 
 
         this.setTitle("Робота зі складом ");
@@ -451,26 +452,22 @@ public class Interaction extends JFrame implements ActionListener {
             panelInteractionWithAvailableData.remove(buttonPanelAvailableData);
             panelInteractionWithAvailableData.remove(labelTitle);
 
-            listOfGroups = new JTextArea(10, 40);
-            listOfGroups.setLineWrap(true);
-            listOfGroups.setWrapStyleWord(true);
-            scrollText = new JScrollPane(listOfGroups);
 
-            panelInteractionWithAvailableData.add(scrollText, BorderLayout.CENTER);
-
-            String s = "";
-            for (int i = 0; i < storage.numberOfGroups(); i++) s += i + ")" + storage.getInfoAboutGroup(i) + "\n";
-            listOfGroups.setText(s);
-            ////////////////////////
             whichGroup = new JLabel("Оберіть групу, яку бажаєте видалити: ");
             whichGroup.setForeground(Color.white);
             whichGroup.setFont(new Font("Georgia", Font.ITALIC, 18));
             whichGroup.setHorizontalAlignment(JLabel.CENTER);
             panelInteractionWithAvailableData.add(whichGroup);
 
-            SpinnerModel value = new SpinnerNumberModel(0, 0, storage.numberOfGroups() - 1, 1);
-            spinnerOfGroup = new JSpinner(value);
-            panelInteractionWithAvailableData.add(spinnerOfGroup, BorderLayout.CENTER);
+            ButtonGroup bg = new ButtonGroup();
+            radioButtonsChooseGroupInEditingGroup = new JRadioButton[storage.numberOfGroups()];
+            for(int i =0; i <radioButtonsChooseGroupInEditingGroup.length ; i++){
+                radioButtonsChooseGroupInEditingGroup[i] = new JRadioButton(storage.getNameOfGroup(i));
+                bg.add(radioButtonsChooseGroupInEditingGroup[i]);
+                panelInteractionWithAvailableData.add(radioButtonsChooseGroupInEditingGroup[i]);
+
+            }
+
 
             buttonNextToDeleteGroup = new JButton("Видалити");
             buttonNextToDeleteGroup.addActionListener(this);
@@ -479,17 +476,133 @@ public class Interaction extends JFrame implements ActionListener {
 
             SwingUtilities.updateComponentTreeUI(availableDataFrame);
 
-        } else if (event.getSource() == buttonNextToDeleteGroup) {
-            numberOfGroup = (Integer) spinnerOfGroup.getValue();
+        }
+        else if (event.getSource() == buttonNextToDeleteGroup) {
             // при видаленні групи видаляти також усі товари в цій групі
+            boolean marker = false;
+            for(int i =0; i< radioButtonsChooseGroupInEditingGroup.length; i++){
+                if(radioButtonsChooseGroupInEditingGroup[i].isSelected()){
+                    indexOfGroup = i;
+                    marker = true;
+                    storage.getGroup(indexOfGroup).deleteAllGoodsInGroup();
+                    storage.deleteGroup(indexOfGroup);
+                    break;
+                }
+            }
 
-            storage.getGroup(numberOfGroup).deleteAllGoodsInGroup();
-            storage.deleteGroup(numberOfGroup);
+            if(!marker){
+                JOptionPane.showMessageDialog(this, "Ви не обрали жодну групу, неможливо видалити.");
+                availableDataFrame.setVisible(false);
+                newFrame.setVisible(true);
+                return;
+            }
+
 
             availableDataFrame.setVisible(false);
             newFrame.setVisible(true);
         }
 
+        else if(event.getSource() == buttonDeleteGoods){
+            panelInteractionWithAvailableData.remove(panelInProcess2);
+            panelInteractionWithAvailableData.remove(panelInProcess);
+            panelInteractionWithAvailableData.remove(buttonPanelAvailableData);
+            panelInteractionWithAvailableData.remove(labelTitle);
+
+            whichGroup = new JLabel("Оберіть групу, у якій знаходиться товар: ");
+            whichGroup.setForeground(Color.white);
+            whichGroup.setFont(new Font("Georgia", Font.ITALIC, 18));
+            whichGroup.setHorizontalAlignment(JLabel.CENTER);
+            panelInteractionWithAvailableData.add(whichGroup);
+
+            ButtonGroup bg = new ButtonGroup();
+            radioButtonsChooseGroupInEditingGroup = new JRadioButton[storage.numberOfGroups()];
+            for(int i =0; i <radioButtonsChooseGroupInEditingGroup.length ; i++){
+                radioButtonsChooseGroupInEditingGroup[i] = new JRadioButton(storage.getNameOfGroup(i));
+                bg.add(radioButtonsChooseGroupInEditingGroup[i]);
+                panelInteractionWithAvailableData.add(radioButtonsChooseGroupInEditingGroup[i]);
+            }
+
+            buttonChooseGroupToDeleteGoods = new JButton("Обрати групу");
+            buttonChooseGroupToDeleteGoods.addActionListener(this);
+
+            panelInProcess = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10));
+            panelInProcess.setBackground(Color.black);
+
+            panelInProcess.add(buttonChooseGroupToDeleteGoods);
+            panelInteractionWithAvailableData.add(panelInProcess);
+
+            SwingUtilities.updateComponentTreeUI(availableDataFrame);
+
+        }
+        else if(event.getSource() == buttonChooseGroupToDeleteGoods){
+            for(int j =0; j < radioButtonsChooseGroupInEditingGroup.length; j++){
+                panelInteractionWithAvailableData.remove(radioButtonsChooseGroupInEditingGroup[j]);
+            }
+            boolean marker = false;
+            panelInteractionWithAvailableData.remove(panelInProcess);
+            panelInteractionWithAvailableData.remove(whichGroup);
+            for(int i =0; i < radioButtonsChooseGroupInEditingGroup.length; i++){
+                if(radioButtonsChooseGroupInEditingGroup[i].isSelected()) {
+                    panelInteractionWithAvailableData.remove(radioButtonsChooseGroupInEditingGroup[i]);
+                    indexOfGroup = i;
+                    marker = true;
+                    break;
+                }
+            }
+
+            if(!marker || storage.getGroup(indexOfGroup).getNumberOfGoodsInGroup() == 0){
+                JOptionPane.showMessageDialog(this, "Ви не обрали жодну групу або у групі немає товарів, неможливо застосувати зміни.");
+                availableDataFrame.setVisible(false);
+                newFrame.setVisible(true);
+                return;
+            }
+
+            ButtonGroup bg = new ButtonGroup();
+            radioButtonsToChooseGoodsInEditingGoods = new JRadioButton[storage.getGroup(indexOfGroup).getNumberOfGoodsInGroup()];
+            for(int i =0; i <radioButtonsToChooseGoodsInEditingGoods.length; i++){
+                radioButtonsToChooseGoodsInEditingGoods[i] = new JRadioButton(storage.getGroup(indexOfGroup).getGood(i).getName());
+                panelInteractionWithAvailableData.add(radioButtonsToChooseGoodsInEditingGoods[i]);
+                bg.add(radioButtonsToChooseGoodsInEditingGoods[i]);
+            }
+
+            buttonToDeleteGood  = new JButton("Видалити товар");
+            buttonToDeleteGood.addActionListener(this);
+            panelInteractionWithAvailableData.add(buttonToDeleteGood);
+
+            SwingUtilities.updateComponentTreeUI(availableDataFrame);
+
+        }
+
+        else if(event.getSource() == buttonToDeleteGood){
+            // for now
+            panelInteractionWithAvailableData.remove(buttonToDeleteGood);
+            for(int i =0; i < radioButtonsToChooseGoodsInEditingGoods.length; i++){
+                panelInteractionWithAvailableData.remove(radioButtonsToChooseGoodsInEditingGoods[i]);
+            }
+
+            boolean marker = false;
+            for(int i =0; i < radioButtonsToChooseGoodsInEditingGoods.length; i++){
+                if(radioButtonsToChooseGoodsInEditingGoods[i].isSelected()){
+                    storage.getGroup(indexOfGroup).deleteGoodsInGroup(i);
+                    marker = true;
+                    break;
+                }
+            }
+            if(!marker){
+                JOptionPane.showMessageDialog(this, "Ви не обрали жодну групу, неможливо застосувати зміни.");
+                availableDataFrame.setVisible(false);
+                newFrame.setVisible(true);
+                return;
+
+            }
+
+            JOptionPane.showMessageDialog(this, "Товар було успішно видалено.");
+            availableDataFrame.setVisible(false);
+            newFrame.setVisible(true);
+
+            SwingUtilities.updateComponentTreeUI(availableDataFrame);
+
+        }
         // actions when button "редагувати групу" is pressed
         else if (event.getSource() == buttonEditGroup) {
 
@@ -499,27 +612,20 @@ public class Interaction extends JFrame implements ActionListener {
             panelInteractionWithAvailableData.remove(labelTitle);
 
 
-            listOfGroups = new JTextArea(10, 40);
-            listOfGroups.setLineWrap(true);
-            listOfGroups.setWrapStyleWord(true);
-            scrollText = new JScrollPane(listOfGroups);
-
-            panelInteractionWithAvailableData.add(scrollText, BorderLayout.CENTER);
-
-            String s = "";
-            for (int i = 0; i < storage.numberOfGroups(); i++) s += i + ")" + storage.getInfoAboutGroup(i) + "\n";
-            listOfGroups.setText(s);
-
             whichGroup = new JLabel("Оберіть групу, яку бажаєте відредагувати: ");
             whichGroup.setForeground(Color.white);
             whichGroup.setFont(new Font("Georgia", Font.ITALIC, 18));
             whichGroup.setHorizontalAlignment(JLabel.CENTER);
             panelInteractionWithAvailableData.add(whichGroup);
 
-            SpinnerModel value = new SpinnerNumberModel(0, 0, storage.numberOfGroups() - 1, 1);
-            spinnerOfGroup = new JSpinner(value);
-            panelInteractionWithAvailableData.add(spinnerOfGroup, BorderLayout.CENTER);
+            ButtonGroup bg = new ButtonGroup();
+            radioButtonsChooseGroupInEditingGroup = new JRadioButton[storage.numberOfGroups()];
+            for(int i =0; i <radioButtonsChooseGroupInEditingGroup.length ; i++){
+                radioButtonsChooseGroupInEditingGroup[i] = new JRadioButton(storage.getNameOfGroup(i));
+                bg.add(radioButtonsChooseGroupInEditingGroup[i]);
+                panelInteractionWithAvailableData.add(radioButtonsChooseGroupInEditingGroup[i]);
 
+            }
 
             buttonNextToEditGroupToDesc = new JButton("Редагувати опис");
 
@@ -540,15 +646,14 @@ public class Interaction extends JFrame implements ActionListener {
 
         } else if (event.getSource() == buttonNextToEditGroupToDesc) {
             // редагувати опис
-
+            for(int i =0; i < radioButtonsChooseGroupInEditingGroup.length; i++){
+                panelInteractionWithAvailableData.remove(radioButtonsChooseGroupInEditingGroup[i]);
+            }
             panelInteractionWithAvailableData.remove(buttonPanelInEdit);
 
 
             panelInteractionWithAvailableData.remove(whichGroup);
-            panelInteractionWithAvailableData.remove(listOfGroups);
-            panelInteractionWithAvailableData.remove(scrollText);
 
-            panelInteractionWithAvailableData.remove(spinnerOfGroup);
 
             questionInEdit = new JLabel("Вкажіть новий опис групи: ");
             questionInEdit.setForeground(Color.white);
@@ -557,68 +662,97 @@ public class Interaction extends JFrame implements ActionListener {
             panelInteractionWithAvailableData.add(questionInEdit);
 
             // new value
-            newNameOrDescOfGroup = new JTextArea(4, 10);
-
-            newNameOrDescOfGroup.setLineWrap(true);
-            newNameOrDescOfGroup.setWrapStyleWord(true);
-            scrollText = new JScrollPane(newNameOrDescOfGroup);
-
-            panelInteractionWithAvailableData.add(scrollText, BorderLayout.CENTER);
+            newNameOrDescOfGroup = new JTextField(15);
 
             buttonAssignGroup = new JButton("Далі");
             buttonAssignGroup.addActionListener(this);
+            panelInteractionWithAvailableData.add(newNameOrDescOfGroup);
+
             panelInteractionWithAvailableData.add(buttonAssignGroup, BorderLayout.SOUTH);
             SwingUtilities.updateComponentTreeUI(availableDataFrame);
 
-        } else if (event.getSource() == buttonAssignGroup) {
-            String newDesc = newNameOrDescOfGroup.getText();
-            storage.editGroup(numberOfGroup, storage.getNameOfGroup(numberOfGroup), newDesc);
 
+        }
+        else if (event.getSource() == buttonAssignGroup) {
             panelInteractionWithAvailableData.remove(questionInEdit);
             panelInteractionWithAvailableData.remove(newNameOrDescOfGroup);
             panelInteractionWithAvailableData.remove(buttonAssignGroup);
+
+            String newDesc = newNameOrDescOfGroup.getText();
+
+            boolean marker = false;
+            for(int i =0; i < radioButtonsChooseGroupInEditingGroup.length; i++){
+                if(radioButtonsChooseGroupInEditingGroup[i].isSelected()) {
+                    marker = true;
+                    indexOfGroup = i;
+                    storage.editGroup(i, storage.getNameOfGroup(indexOfGroup), newDesc);
+                    break;
+                }
+            }
+
+            if(!marker){
+                JOptionPane.showMessageDialog(this, "Ви не обрали жодну групу, неможливо застосувати зміни.");
+                availableDataFrame.setVisible(false);
+                newFrame.setVisible(true);
+                return;
+            }
 
             SwingUtilities.updateComponentTreeUI(availableDataFrame);
             availableDataFrame.setVisible(false);
             newFrame.setVisible(true);
 
-        } // натиснута кнопка редагувати опис групи
+        } // натиснута кнопка редагувати назву групи
         else if (event.getSource() == buttonNextToEditNameOfGroup) {
 
+            for(int i =0; i < radioButtonsChooseGroupInEditingGroup.length; i++){
+                panelInteractionWithAvailableData.remove(radioButtonsChooseGroupInEditingGroup[i]);
+            }
             panelInteractionWithAvailableData.remove(buttonPanelInEdit);
 
+
             panelInteractionWithAvailableData.remove(whichGroup);
-            panelInteractionWithAvailableData.remove(listOfGroups);
-            panelInteractionWithAvailableData.remove(scrollText);
 
-            panelInteractionWithAvailableData.remove(spinnerOfGroup);
 
-            questionInEditToChangeNameOfGroup = new JLabel("Вкажіть нову назву групи: ");
-            questionInEditToChangeNameOfGroup.setForeground(Color.white);
-            questionInEditToChangeNameOfGroup.setFont(new Font("Georgia", Font.ITALIC, 18));
-            questionInEditToChangeNameOfGroup.setHorizontalAlignment(JLabel.CENTER);
-            panelInteractionWithAvailableData.add(questionInEditToChangeNameOfGroup);
+            questionInEdit = new JLabel("Вкажіть нову назву групи: ");
+            questionInEdit.setForeground(Color.white);
+            questionInEdit.setFont(new Font("Georgia", Font.ITALIC, 18));
+            questionInEdit.setHorizontalAlignment(JLabel.CENTER);
+            panelInteractionWithAvailableData.add(questionInEdit);
 
             // new value
-            newNameOrDescOfGroup = new JTextArea(4, 10);
+            newNameOrDescOfGroup = new JTextField(15);
 
-            newNameOrDescOfGroup.setLineWrap(true);
-            newNameOrDescOfGroup.setWrapStyleWord(true);
-            scrollText = new JScrollPane(newNameOrDescOfGroup);
-
-            panelInteractionWithAvailableData.add(scrollText, BorderLayout.CENTER);
-            // change button
             buttonToChangeNameOgGroup = new JButton("Далі");
             buttonToChangeNameOgGroup.addActionListener(this);
+            panelInteractionWithAvailableData.add(newNameOrDescOfGroup);
+
             panelInteractionWithAvailableData.add(buttonToChangeNameOgGroup, BorderLayout.SOUTH);
-
-
             SwingUtilities.updateComponentTreeUI(availableDataFrame);
 
-        } else if (event.getSource() == buttonToChangeNameOgGroup) {
-            String newName = newNameOrDescOfGroup.getText();
-            storage.editGroup(numberOfGroup, newName, storage.getDescOfGroup(numberOfGroup));
+        }
+        else if (event.getSource() == buttonToChangeNameOgGroup) {
 
+            panelInteractionWithAvailableData.remove(questionInEdit);
+            panelInteractionWithAvailableData.remove(newNameOrDescOfGroup);
+            panelInteractionWithAvailableData.remove(buttonToChangeNameOgGroup);
+            String newName = newNameOrDescOfGroup.getText();
+
+            boolean marker = false;
+            for(int i =0; i < radioButtonsChooseGroupInEditingGroup.length; i++){
+                if(radioButtonsChooseGroupInEditingGroup[i].isSelected()) {
+                    marker = true;
+                    indexOfGroup = i;
+                    storage.editGroup(i, newName, storage.getDescOfGroup(indexOfGroup));
+                    break;
+                }
+            }
+
+            if(!marker){
+                JOptionPane.showMessageDialog(this, "Ви не обрали жодну групу, неможливо застосувати зміни.");
+                availableDataFrame.setVisible(false);
+                newFrame.setVisible(true);
+                return;
+            }
 
             SwingUtilities.updateComponentTreeUI(availableDataFrame);
             availableDataFrame.setVisible(false);
@@ -705,7 +839,6 @@ public class Interaction extends JFrame implements ActionListener {
                 panelInteractionWithAvailableData.remove(radioButtonsToChooseGoodsInEditingGood);
             }
             panelInteractionWithAvailableData.remove(buttonToEditSpecifiedGood);
-            System.out.println("Кількість товарів у групі: " + storage.getGroup(indexOfGroup).getNumberOfGoodsInGroup());
             boolean marker = false;
             for (int j = 0; j < storage.getGroup(indexOfGroup).getNumberOfGoodsInGroup(); j++) {
                 // дивимося який продукт був обраний користувачем для редагування
@@ -871,6 +1004,8 @@ public class Interaction extends JFrame implements ActionListener {
         }
         else if(event.getSource() == buttonToWriteInfoInFile){
             storage.writeAllGroups();
+            JOptionPane.showMessageDialog(this, "Дані було успішно записано до файлу.");
+
 
         }
     }

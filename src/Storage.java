@@ -110,9 +110,10 @@ public class Storage {
     // перевірка чи назва товару унікальна (третій пункт)
     // повертає false, якщо назва товару вже є і true якщо назва товару унікальна
     public boolean searchForDuplicatesOfGoods(String nameOfGood){
+        nameOfGood = nameOfGood.toLowerCase();
         for(int i =0; i < this.groups.length; i++){
             for(int j = 0; j < this.groups[i].getNumberOfGoodsInGroup(); j++) {
-               if(this.groups[i].getGood(j).getName().equals(nameOfGood)) return false;
+               if(this.groups[i].getGood(j).getName().toLowerCase().equals(nameOfGood)) return false;
             }
         }
         return true;

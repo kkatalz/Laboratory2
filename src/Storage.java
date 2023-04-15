@@ -121,9 +121,10 @@ public class Storage {
     // знайти товар (восьмий пункт)
     public String[] searchForGoods(String nameOfGoods){
         String[] s = new String[4];
+        nameOfGoods = nameOfGoods.toLowerCase();
         for(Group group : this.groups){
             for(int j =0; j < group.getNumberOfGoodsInGroup(); j++){
-                if(group.getGood(j).getName().equals(nameOfGoods)) {
+                if(group.getGood(j).getName().toLowerCase().equals(nameOfGoods)) {
                     s[0] = "Назва: " + group.getGood(j).getName();
                     s[0] = s[0].replaceAll("null", "");
                     s[1] = " Опис: " + group.getGood(j).getDescription();

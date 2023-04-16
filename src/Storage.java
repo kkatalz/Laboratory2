@@ -118,6 +118,18 @@ public class Storage {
         }
         return true;
     }
+
+    // перевірка чи назва групи унікальна (четвертий пункт)
+    // повертає false, якщо назва групи вже є і true якщо назва групи унікальна
+    public boolean searchForDuplicatesOfGroup(String nameOfGroup){
+        nameOfGroup = nameOfGroup.toLowerCase();
+        for(int i =0; i < this.groups.length; i++){
+            if (this.groups[i].getName().toLowerCase().equals(nameOfGroup))return false;
+
+        }
+        return true;
+    }
+
     // знайти товар (восьмий пункт)
     public String[] searchForGoods(String nameOfGoods){
         String[] s = new String[4];

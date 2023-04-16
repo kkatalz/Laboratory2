@@ -11,7 +11,7 @@ public class Interaction extends JFrame implements ActionListener {
     JButton StartButton, CancelButton, availableDataButton, newDataButton, makeGroup, addGood, BACK, buttonEditGroup, Submit,
             buttonEditGoods, buttonDeleteGroup, buttonDeleteGoods, buttonNextToEditGroupToDesc, buttonToChooseGroupInAdditionGoods,
             buttonNextToEditNameOfGroup, buttonAssignGroup, buttonNextToDeleteGroup, buttonToChangeNameOgGroup,
-            buttonToChooseGroupInEditingGoods, buttonToEditSpecifiedGood, buttonToChooseParametrOfProductL, showAllInfo,
+            buttonToChooseGroupInEditingGoods, buttonToEditSpecifiedGood, buttonToChooseParametrOfProductL,showAllInfo,
             SubmitGood, buttonToDeleteGood, buttonSearchForGoods, buttonFinishSearching,
             buttonToFinishEditingGoodsL, buttonToWriteInfoInFile, buttonChooseGroupToDeleteGoods, buttonSearchForGoodsWithEnteredData,
             buttonAddAmountOfGoods, buttonMakeLessAmountOfGoods, buttonAcceptAddAmountOfGoods, buttonToChooseGroupInAddingAmount,
@@ -229,7 +229,8 @@ public class Interaction extends JFrame implements ActionListener {
         } else if (event.getSource() == CancelButton) {
             this.dispose();
 
-        } else if (event.getSource() == showAllInfo) {
+        } else if (event.getSource()==showAllInfo){
+
 
 
             //створюємо третє вікно
@@ -353,9 +354,9 @@ public class Interaction extends JFrame implements ActionListener {
             String description = descriptionField.getText();
 
 
-            if (!storage.searchForDuplicatesOfGroup(name)) {
-                JOptionPane.showMessageDialog(this, "Неможливо створити дану групу, бо група з такою назвою вже існує.");
-            } else {
+            if(!storage.searchForDuplicatesOfGroup(name)){
+                JOptionPane.showMessageDialog(this,"Неможливо створити дану групу, бо група з такою назвою вже існує.");
+            }else {
 
                 storage.addGroup(name, description);
                 panelInteractionWithNewData.setVisible(false);

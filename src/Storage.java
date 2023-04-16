@@ -15,6 +15,10 @@ public class Storage {
         groups = new Group[0];
     }
 
+    Storage(Group[] groups) {
+        this.groups = groups;
+    }
+
     // second task: to write all groups and their goods to file
     public void writeAllGroups() {
         try {

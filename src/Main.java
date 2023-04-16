@@ -25,7 +25,6 @@ public class Main {
         }, "Молочка", "Молочні фермерські продукти");
 
 
-
 //3 групи непродовольчих товарів
         Group nonFoodGroupOfCloth = new Group(new Goods[]{
                 new Goods("джинси", "фасон - бойфренди", "CalvinKlein", 16, 2_000),
@@ -44,18 +43,16 @@ public class Main {
         }, "Усе для дому", "Найпотрібніше після важкого дня");
 
 
-
-
-    //check if works
+        //check if works
         nonFoodGroupOfHomely.addGoodsToGroup("світер", "англійський", "Zara", 14, 2_500);
 
-for(Goods good:nonFoodGroupOfHomely.getGoods()){
-    System.out.println(good.getName());
-}
+        for (Goods good : nonFoodGroupOfHomely.getGoods()) {
+            System.out.println(good.getName());
+        }
 
-Storage workWithGroup=new Storage();
+        Storage workWithGroup = new Storage(new Group[]{foodGroupOfCereals, foodGroupOfMilk, nonFoodGroupOfCloth, nonFoodGroupOfElectronic, nonFoodGroupOfHomely});
 
-        Interaction interactionWithUser=new Interaction(workWithGroup);
+        Interaction interactionWithUser = new Interaction(workWithGroup);
         interactionWithUser.setVisible(true);
 
     }

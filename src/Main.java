@@ -5,6 +5,7 @@
 // 1.Реалізувати графічний інтерфейс користувача
 //5. Додавання\редагування\видалення групи товарів- при видаленні групи товарів , видаляти й всі товари в даній групі
 
+import java.awt.*;
 import java.util.Arrays;
 
 public class Main {
@@ -52,8 +53,10 @@ public class Main {
 
         Storage workWithGroup = new Storage(new Group[]{foodGroupOfCereals, foodGroupOfMilk, nonFoodGroupOfCloth, nonFoodGroupOfElectronic, nonFoodGroupOfHomely});
 
+//        EventQueue.invokeLater(() -> new Tree(workWithGroup).setVisible(true));
+
         Interaction interactionWithUser = new Interaction(workWithGroup);
         interactionWithUser.setVisible(true);
-
+        interactionWithUser.setLocationRelativeTo(null);
     }
 }

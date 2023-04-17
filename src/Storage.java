@@ -106,6 +106,10 @@ public class Storage {
         return this.groups[index];
     }
 
+    public Group[] getGroups() {
+        return groups;
+    }
+
     // to get an array of goods names of specified group
     public String[] getNamesOfGoods(int indexOfGroup){
         return this.groups[indexOfGroup].getNamesOfGoods();

@@ -1,17 +1,17 @@
-import org.w3c.dom.ls.LSOutput;
+
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Objects;
-//TODO другий екран -2 кнопки: робота з новими даними й старими
+
+//TODO setLocationRelativeTo(null);
 
 public class Interaction extends JFrame implements ActionListener {
     JButton StartButton, CancelButton, availableDataButton, newDataButton, makeGroup, addGood, BACK, buttonEditGroup, Submit,
             buttonEditGoods, buttonDeleteGroup, buttonDeleteGoods, buttonNextToEditGroupToDesc, buttonToChooseGroupInAdditionGoods,
             buttonNextToEditNameOfGroup, buttonAssignGroup, buttonNextToDeleteGroup, buttonToChangeNameOgGroup,
-            buttonToChooseGroupInEditingGoods, buttonToEditSpecifiedGood, buttonToChooseParametrOfProductL,showAllInfo,
+            buttonToChooseGroupInEditingGoods, buttonToEditSpecifiedGood, buttonToChooseParametrOfProductL, showAllInfo,
             SubmitGood, buttonToDeleteGood, buttonSearchForGoods, buttonFinishSearching,
             buttonToFinishEditingGoodsL, buttonToWriteInfoInFile, buttonChooseGroupToDeleteGoods, buttonSearchForGoodsWithEnteredData,
             buttonAddAmountOfGoods, buttonMakeLessAmountOfGoods, buttonAcceptAddAmountOfGoods, buttonToChooseGroupInAddingAmount,
@@ -20,7 +20,7 @@ public class Interaction extends JFrame implements ActionListener {
     JLabel[] labelWithGoodsInSearching;
     JPanel mainPanel, buttonPanel, buttonPanelData, panelInteractionWithNewData, buttonPanelNewData, panelInteractionWithAvailableData,
             buttonPanelAvailableData, buttonPanelInEdit, buttonPanelForBack, panelInProcess, panelInProcess2, panelInteractionWithNewGood,
-            panelToSearchForGoods, panelToChooseChangeAmountOfGoods;
+            panelToSearchForGoods, panelToChooseChangeAmountOfGoods, newPanel;
     JFrame newFrame, thirdFrame, makeGroupFrame, addGoodFrame, availableDataFrame, makeGoodFrame, makeNewGoodFrame;
     JTextField newNameOrDescOfGroup, textFieldSearchGoods, textFieldAddAmountOfGoods;
     int indexOfParametr;
@@ -36,19 +36,6 @@ public class Interaction extends JFrame implements ActionListener {
 
     public Interaction(Storage storage) {
         this.storage = storage;
-
-        storage.addGroup("Їжа", "поїсти");
-        storage.addGroup("одяг", "носити");
-        storage.addGroup("кава", "пити");
-        storage.addGroup("Взуття", "Спортивне");
-
-        storage.getGroup(0).addGoodsToGroup("Гречка", "Україна", "Верес", 20, 30);
-        storage.getGroup(0).addGoodsToGroup("Хліб", "Україна", "Київхліб", 10, 24);
-        storage.getGroup(0).addGoodsToGroup("Молоко", "знежирене", "Яготинське", 90, 33);
-        storage.getGroup(1).addGoodsToGroup("Джинси", "mom fit", "Bershka", 200, 800);
-        storage.getGroup(1).addGoodsToGroup("Куртка", "Україна", "Zara", 90, 900);
-
-        storage.getGroup(2).addGoodsToGroup("Lavazza", "Україна", "міцна", 6, 5);
 
 
         this.setTitle("Робота зі складом ");
@@ -172,11 +159,13 @@ public class Interaction extends JFrame implements ActionListener {
             newFrame.setSize(500, 400);
             newFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-            JPanel newPanel = new JPanel();
+            newPanel = new JPanel();
             newPanel.setBackground(Color.BLACK);
             newPanel.setBorder(BorderFactory.createEmptyBorder(55, 10, 10, 10));
             newPanel.setLayout(new FlowLayout());
+            newFrame.setLocationRelativeTo(null);
             newFrame.add(newPanel);
+
 
             JLabel newLabel = new JLabel("Оберіть із якими даними працювати");
 
@@ -223,15 +212,38 @@ public class Interaction extends JFrame implements ActionListener {
             buttonPanelForBack.add(BACK, BorderLayout.SOUTH);
             BACK.addActionListener(this);
 
+            newFrame.setLocationRelativeTo(null);
             newFrame.setVisible(true);
 
             //закрити вікно
         } else if (event.getSource() == CancelButton) {
             this.dispose();
 
-        } else if (event.getSource()==showAllInfo){
+        } else if (event.getSource() == showAllInfo) {
 
+            newFrame.setVisible(false);
 
+            JFrame treePanel = new JFrame("Взаємодія з даними");
+            treePanel.setSize(500, 400);
+            treePanel.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+            Tree tree = new Tree(this.storage);
+
+            // кнопки на головній панелі
+            JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 60, 10));//додається інтервал між кнопками START Cancel
+            buttonPanel.setBackground(Color.black);
+            treePanel.add(tree.getPanel());
+            treePanel.add(buttonPanel, BorderLayout.SOUTH);
+
+            JButton BACK = new JButton("BACK");
+            BACK.setBackground(Color.white);
+            buttonPanel.add(BACK);
+            BACK.addActionListener(e -> {
+                treePanel.setVisible(false);
+                newFrame.setVisible(true);
+            });
+            treePanel.setVisible(true);
+            treePanel.setLocationRelativeTo(null);
 
             //створюємо третє вікно
         } else if (event.getSource() == newDataButton) {
@@ -354,9 +366,9 @@ public class Interaction extends JFrame implements ActionListener {
             String description = descriptionField.getText();
 
 
-            if(!storage.searchForDuplicatesOfGroup(name)){
-                JOptionPane.showMessageDialog(this,"Неможливо створити дану групу, бо група з такою назвою вже існує.");
-            }else {
+            if (!storage.searchForDuplicatesOfGroup(name)) {
+                JOptionPane.showMessageDialog(this, "Неможливо створити дану групу, бо група з такою назвою вже існує.");
+            } else {
 
                 storage.addGroup(name, description);
                 panelInteractionWithNewData.setVisible(false);

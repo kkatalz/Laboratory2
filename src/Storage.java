@@ -23,7 +23,7 @@ public class Storage {
     public void writeAllGroups() {
         try {
             // the path of the file must be changed depending on the user
-            FileWriter fw = new FileWriter("/home/liza/IdeaProjects/Laboratory2/AllGroups.txt");
+            FileWriter fw = new FileWriter("/C:/Users/plato/IdeaProjects/Laboratory2/AllGroups.txt");
             String s;
             fw.write("Усі групи: ");
             fw.write(System.getProperty("line.separator"));
@@ -141,10 +141,12 @@ public class Storage {
     // знайти товар (восьмий пункт)
     public String[] searchForGoods(String nameOfGoods){
         String[] s = new String[4];
+        boolean found = false;
         nameOfGoods = nameOfGoods.toLowerCase();
         for(Group group : this.groups){
             for(int j =0; j < group.getNumberOfGoodsInGroup(); j++){
                 if(group.getGood(j).getName().toLowerCase().equals(nameOfGoods)) {
+                    found = true;
                     s[0] = "Назва: " + group.getGood(j).getName();
                     s[0] = s[0].replaceAll("null", "");
                     s[1] = " Опис: " + group.getGood(j).getDescription();
@@ -153,8 +155,8 @@ public class Storage {
                             group.getGood(j).getAmountOnStock() + ". Ціна: " + group.getGood(j).getPrice();
                 }
             }
+            if(!found) s[0] = "Вказаного товару не існує.";
         }
-        System.out.println(Arrays.toString(s));
         return s;
     }
 

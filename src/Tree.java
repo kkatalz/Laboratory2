@@ -15,20 +15,23 @@ public class Tree extends JFrame {
 
 
         DefaultMutableTreeNode top = new DefaultMutableTreeNode(" Склад ");
+
         for (Group group : groups) {
             DefaultMutableTreeNode groupNode = new DefaultMutableTreeNode(group.getName());
 
 
             DefaultMutableTreeNode priceOfAllGoods=new DefaultMutableTreeNode(group.getAllPrice());
+            DefaultMutableTreeNode emptyTree=new DefaultMutableTreeNode();
             for (Goods good : group.getGoods()) {
                  goodNode = new DefaultMutableTreeNode(good.getName());
                 groupNode.add(goodNode);
                 DefaultMutableTreeNode goodsDetails=new DefaultMutableTreeNode(good.toString());
                 goodNode.add(goodsDetails);
             }
-
+            top.add(emptyTree);
             top.add(groupNode);
             top.add( priceOfAllGoods);
+            top.add(emptyTree);
         }
 
         JTree tree = new JTree(top);

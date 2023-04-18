@@ -15,14 +15,14 @@ public class Interaction extends JFrame implements ActionListener {
             SubmitGood, buttonToDeleteGood, buttonSearchForGoods, buttonFinishSearching,
             buttonToFinishEditingGoodsL, buttonToWriteInfoInFile, buttonChooseGroupToDeleteGoods, buttonSearchForGoodsWithEnteredData,
             buttonAddAmountOfGoods, buttonMakeLessAmountOfGoods, buttonAcceptAddAmountOfGoods, buttonToChooseGroupInAddingAmount,
-            buttonAcceptGoods;
+            buttonAcceptGoods,buttonRemoveGoods,buttonToChooseGroupInRemovingAmount,buttonAcceptRemoveAmountOfGoods;
     JLabel nameLabel, startLabel, whichGroup, questionInEdit, labelInfoAboutGoods, labelToFindGoodsByName, labelQuestion;
     JLabel[] labelWithGoodsInSearching;
     JPanel mainPanel, buttonPanel, buttonPanelData, panelInteractionWithNewData, buttonPanelNewData, panelInteractionWithAvailableData,
             buttonPanelAvailableData, buttonPanelInEdit, buttonPanelForBack, panelInProcess, panelInProcess2, panelInteractionWithNewGood,
             panelToSearchForGoods, panelToChooseChangeAmountOfGoods, newPanel;
     JFrame newFrame, thirdFrame, makeGroupFrame, addGoodFrame, availableDataFrame, makeGoodFrame, makeNewGoodFrame;
-    JTextField newNameOrDescOfGroup, textFieldSearchGoods, textFieldAddAmountOfGoods;
+    JTextField newNameOrDescOfGroup, textFieldSearchGoods, textFieldAddAmountOfGoods,textFieldDecreaseAmountOfGoods;
     int indexOfParametr;
     JTextField nameField, descriptionField, newParametrInEditingGoods, factureField, priceField, amountOnStockField;
 
@@ -148,6 +148,7 @@ public class Interaction extends JFrame implements ActionListener {
 
         panelInteractionWithAvailableData.add(panelToChooseChangeAmountOfGoods);
 
+        availableDataFrame.setLocationRelativeTo(null);
         availableDataFrame.setVisible(true);
     }
 
@@ -212,6 +213,7 @@ public class Interaction extends JFrame implements ActionListener {
             buttonPanelForBack.add(BACK, BorderLayout.SOUTH);
             BACK.addActionListener(this);
 
+            newFrame.setLocationRelativeTo(null);
             newFrame.setLocationRelativeTo(null);
             newFrame.setVisible(true);
 
@@ -279,6 +281,7 @@ public class Interaction extends JFrame implements ActionListener {
             buttonPanelNewData.add(addGood, BorderLayout.CENTER);
             addGood.addActionListener(this);
 
+            thirdFrame.setLocationRelativeTo(null);
             thirdFrame.setVisible(true);
 
             //нове вікно, щоб додати групу
@@ -465,6 +468,7 @@ public class Interaction extends JFrame implements ActionListener {
             buttonPanel.add(SubmitGood);
             SubmitGood.addActionListener(this);
 
+            makeGoodFrame.setLocationRelativeTo(null);
             makeGoodFrame.setVisible(true);
 
 
@@ -538,12 +542,14 @@ public class Interaction extends JFrame implements ActionListener {
             if (!marker) {
                 JOptionPane.showMessageDialog(this, "Ви не обрали жодну групу, неможливо видалити.");
                 availableDataFrame.setVisible(false);
+                newFrame.setLocationRelativeTo(null);
                 newFrame.setVisible(true);
                 return;
             }
 
 
             availableDataFrame.setVisible(false);
+            newFrame.setLocationRelativeTo(null);
             newFrame.setVisible(true);
         } else if (event.getSource() == buttonDeleteGoods) {
             panelInteractionWithAvailableData.remove(panelInProcess2);
@@ -790,7 +796,7 @@ public class Interaction extends JFrame implements ActionListener {
 
             }
 
-            if(!storage.searchForDuplicatesOfGroup(newName)){
+            if (!storage.searchForDuplicatesOfGroup(newName)) {
                 JOptionPane.showMessageDialog(this, "Неможливо змінити назву групи.");
                 availableDataFrame.setVisible(false);
                 newFrame.setVisible(true);
@@ -1084,6 +1090,7 @@ public class Interaction extends JFrame implements ActionListener {
             panelToSearchForGoods.add(labelToFindGoodsByName);
             panelToSearchForGoods.add(textFieldSearchGoods);
             panelToSearchForGoods.add(buttonSearchForGoodsWithEnteredData);
+            availableDataFrame.setLocationRelativeTo(null);
             availableDataFrame.setVisible(true);
         } else if (event.getSource() == buttonSearchForGoodsWithEnteredData) {
 
@@ -1161,7 +1168,7 @@ public class Interaction extends JFrame implements ActionListener {
                 panelInteractionWithAvailableData.add(radioButtonsToChooseGroupInEditingGoods[i]);
             }
 
-            buttonToChooseGroupInAddingAmount = new JButton("ОК");
+            buttonToChooseGroupInAddingAmount = new JButton("OK");
             buttonToChooseGroupInAddingAmount.addActionListener(this);
             panelInteractionWithAvailableData.add(buttonToChooseGroupInAddingAmount);
 
@@ -1246,7 +1253,6 @@ public class Interaction extends JFrame implements ActionListener {
             panelInteractionWithAvailableData.add(textFieldAddAmountOfGoods);
             panelInteractionWithAvailableData.add(buttonAcceptAddAmountOfGoods);
             SwingUtilities.updateComponentTreeUI(availableDataFrame);
-
         } else if (event.getSource() == buttonAcceptAddAmountOfGoods) {
             String s = textFieldAddAmountOfGoods.getText();
 
@@ -1271,10 +1277,148 @@ public class Interaction extends JFrame implements ActionListener {
             availableDataFrame.setVisible(false);
             newFrame.setVisible(true);
 
+
+        } //Пункт 7. Списання товару
+        else if (event.getSource() == buttonMakeLessAmountOfGoods) {
+            panelInteractionWithAvailableData.remove(panelInProcess2);
+            panelInteractionWithAvailableData.remove(panelInProcess);
+            panelInteractionWithAvailableData.remove(panelToChooseChangeAmountOfGoods);
+            panelInteractionWithAvailableData.remove(buttonPanelAvailableData);
+            panelInteractionWithAvailableData.remove(labelTitle);
+
+            radioButtonsToChooseGroupInEditingGoods = new JRadioButton[storage.numberOfGroups()];
+
+            labelQuestion = new JLabel("Оберіть групу: ");
+            labelQuestion.setForeground(Color.white);
+            labelQuestion.setFont(new Font("Georgia", Font.ITALIC, 17));
+            labelQuestion.setHorizontalAlignment(SwingConstants.LEFT);
+
+            panelInteractionWithAvailableData.add(labelQuestion);
+
+            ButtonGroup bg = new ButtonGroup();
+            for (int i = 0; i < storage.numberOfGroups(); i++) {
+                radioButtonsToChooseGroupInEditingGoods[i] = new JRadioButton(storage.getNameOfGroup(i));
+                bg.add(radioButtonsToChooseGroupInEditingGoods[i]);
+                panelInteractionWithAvailableData.add(radioButtonsToChooseGroupInEditingGoods[i]);
+            }
+
+            buttonToChooseGroupInRemovingAmount = new JButton("ОК");
+            buttonToChooseGroupInRemovingAmount.addActionListener(this);
+            panelInteractionWithAvailableData.add(buttonToChooseGroupInRemovingAmount);
+
+            SwingUtilities.updateComponentTreeUI(availableDataFrame);
+        } else if (event.getSource() == buttonToChooseGroupInRemovingAmount) {
+
+            panelInteractionWithAvailableData.remove(labelQuestion);
+            for (int i = 0; i < radioButtonsToChooseGroupInEditingGoods.length; i++) {
+                panelInteractionWithAvailableData.remove(radioButtonsToChooseGroupInEditingGoods[i]);
+            }
+            panelInteractionWithAvailableData.remove(buttonToChooseGroupInRemovingAmount);
+
+            boolean m = false;
+            for (int i = 0; i < radioButtonsToChooseGroupInEditingGoods.length; i++) {
+                if (radioButtonsToChooseGroupInEditingGoods[i].isSelected()) {
+                    m = true;
+                    indexOfGroup = i;
+                }
+            }
+
+            if (!m) {
+                JOptionPane.showMessageDialog(this, "Ви не обрали жодну групу,неможливо застосувати зміни.");
+                availableDataFrame.setVisible(false);
+                newFrame.setVisible(true);
+                return;
+            }
+
+            labelQuestion = new JLabel("Оберіть товар: ");
+            labelQuestion.setForeground(Color.white);
+            labelQuestion.setFont(new Font("Georgia", Font.ITALIC, 17));
+            labelQuestion.setHorizontalAlignment(SwingConstants.LEFT);
+
+            panelInteractionWithAvailableData.add(labelQuestion);
+
+            radioButtonsToChooseGoodsInEditingGoods = new JRadioButton[storage.getGroup(indexOfGroup).getNumberOfGoodsInGroup()];
+            ButtonGroup bg = new ButtonGroup();
+            for (int i = 0; i < radioButtonsToChooseGoodsInEditingGoods.length; i++) {
+                radioButtonsToChooseGoodsInEditingGoods[i] = new JRadioButton(storage.getGroup(indexOfGroup).getGood(i).getName());
+                bg.add(radioButtonsToChooseGoodsInEditingGoods[i]);
+                panelInteractionWithAvailableData.add(radioButtonsToChooseGoodsInEditingGoods[i]);
+            }
+
+            buttonRemoveGoods = new JButton("OK");
+            buttonRemoveGoods.addActionListener(this);
+            panelInteractionWithAvailableData.add(buttonRemoveGoods);
+
+            SwingUtilities.updateComponentTreeUI(availableDataFrame);
+
+        } else if (event.getSource() == buttonRemoveGoods) {
+            panelInteractionWithAvailableData.remove(labelQuestion);
+            panelInteractionWithAvailableData.remove(buttonRemoveGoods);
+            for (JRadioButton radioButtonsToChooseGoodsInEditingGood : radioButtonsToChooseGoodsInEditingGoods) {
+                panelInteractionWithAvailableData.remove(radioButtonsToChooseGoodsInEditingGood);
+            }
+
+            boolean m = false;
+            for (int i = 0; i < radioButtonsToChooseGoodsInEditingGoods.length; i++) {
+                if (radioButtonsToChooseGoodsInEditingGoods[i].isSelected()) {
+                    m = true;
+                    indexOfProduct = i;
+                }
+            }
+
+            if (!m) {
+                JOptionPane.showMessageDialog(this, "Ви не обрали жоден товар, неможливо застосувати зміни.");
+                availableDataFrame.setVisible(false);
+                newFrame.setVisible(true);
+                return;
+            }
+
+            labelQuestion = new JLabel("Вкажіть, скільки списати товару: ");
+            labelQuestion.setForeground(Color.white);
+            labelQuestion.setFont(new Font("Georgia", Font.ITALIC, 17));
+            labelQuestion.setHorizontalAlignment(SwingConstants.LEFT);
+
+            textFieldDecreaseAmountOfGoods = new JTextField(8);
+
+            buttonAcceptRemoveAmountOfGoods = new JButton("ОК");
+            buttonAcceptRemoveAmountOfGoods.addActionListener(this);
+
+            panelInteractionWithAvailableData.add(labelQuestion);
+            panelInteractionWithAvailableData.add(textFieldDecreaseAmountOfGoods);
+            panelInteractionWithAvailableData.add(buttonAcceptRemoveAmountOfGoods);
+            SwingUtilities.updateComponentTreeUI(availableDataFrame);
+
+
+        }  else if (event.getSource() == buttonAcceptRemoveAmountOfGoods) {
+        String s = textFieldDecreaseAmountOfGoods.getText();
+
+        int i;
+        try {
+            i = Integer.parseInt(s);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Невірно вказані дані.");
+            availableDataFrame.setVisible(false);
+            newFrame.setVisible(true);
+            return;
         }
+
+        if (i < 0) {
+            JOptionPane.showMessageDialog(this, "Невірно вказані дані.");
+            availableDataFrame.setVisible(false);
+            newFrame.setVisible(true);
+            return;
+        }
+        storage.getGroup(indexOfGroup).getGood(indexOfProduct).setAmountOnStock(storage.getGroup(indexOfGroup).getGood(indexOfProduct).getAmountOnStock() - i);
+            if(storage.getGroup(indexOfGroup).getGood(indexOfProduct).getAmountOnStock()<0){
+                storage.getGroup(indexOfGroup).getGood(indexOfProduct).setAmountOnStock(0);
+            }
+
+        availableDataFrame.setVisible(false);
+        newFrame.setVisible(true);
+
     }
 
-
+    }
 }
 
 /**

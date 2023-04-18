@@ -43,6 +43,14 @@ public class Main {
                 new Goods("шампунь", "для волосся з посіченими кінчиками", "Garnier", 40, 180),
         }, "Усе для дому", "Найпотрібніше після важкого дня");
 
+        Group nonFoodGroupOfFootWear = new Group(new Goods[]{
+                new Goods("звичайні кросівки", "на кожен день", "Puma", 12, 3_000),
+                new Goods("бігові кросівки", "сухі навіть після зливи", "Nike", 9, 2_080),
+        }, "Взуття", "Спортивне і на кожен день");
+
+
+
+
 
         //check if works
         nonFoodGroupOfHomely.addGoodsToGroup("світер", "англійський", "Zara", 14, 2_500);
@@ -51,7 +59,7 @@ public class Main {
             System.out.println(good.getName());
         }
 
-        Storage workWithGroup = new Storage(new Group[]{foodGroupOfCereals, foodGroupOfMilk, nonFoodGroupOfCloth, nonFoodGroupOfElectronic, nonFoodGroupOfHomely});
+        Storage workWithGroup = new Storage(new Group[]{foodGroupOfCereals, foodGroupOfMilk, nonFoodGroupOfCloth, nonFoodGroupOfElectronic, nonFoodGroupOfHomely,nonFoodGroupOfFootWear});
 
 //        EventQueue.invokeLater(() -> new Tree(workWithGroup).setVisible(true));
 

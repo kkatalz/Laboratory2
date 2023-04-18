@@ -211,7 +211,10 @@ public class Interaction extends JFrame implements ActionListener {
 
             BACK = new JButton("BACK");
             buttonPanelForBack.add(BACK, BorderLayout.SOUTH);
-            BACK.addActionListener(this);
+            BACK.addActionListener(e -> {
+                newFrame.setVisible(false);
+                this.setVisible(true);
+            });
 
             newFrame.setLocationRelativeTo(null);
             newFrame.setLocationRelativeTo(null);
@@ -997,10 +1000,6 @@ public class Interaction extends JFrame implements ActionListener {
 
             SwingUtilities.updateComponentTreeUI(availableDataFrame);
 
-        } else if (event.getSource() == BACK) {
-            this.setVisible(false);
-            Interaction prevFrame = new Interaction(storage);
-            prevFrame.setVisible(true);
         }
         // користувач ввів поредагований параметр
         else if (event.getSource() == buttonToFinishEditingGoodsL) {

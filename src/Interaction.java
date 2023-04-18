@@ -358,12 +358,14 @@ public class Interaction extends JFrame implements ActionListener {
             gbc.insets = new Insets(65, 5, 5, 5);
             panelInteractionWithNewData.add(descriptionField, gbc);
 
+            makeGroupFrame.setLocationRelativeTo(null);
             makeGroupFrame.setVisible(true);
 
 
         }//кнопка ОК зберігає нові дані
         else if (event.getSource() == Submit) {
 
+            makeGroupFrame.setVisible(false);
             //зберігаємо додані групи
             String name = nameField.getText();
             String description = descriptionField.getText();
@@ -408,6 +410,7 @@ public class Interaction extends JFrame implements ActionListener {
             panelInteractionWithNewGood.add(buttonToChooseGroupInAdditionGoods, BorderLayout.CENTER);
 
             SwingUtilities.updateComponentTreeUI(makeNewGoodFrame);
+            makeNewGoodFrame.setLocationRelativeTo(null);
             makeNewGoodFrame.setVisible(true);
 
             //додати товар до групи
@@ -418,17 +421,18 @@ public class Interaction extends JFrame implements ActionListener {
             makeGoodFrame = new JFrame("Додати товар до групи");
             makeGoodFrame.setSize(500, 400);
             makeGoodFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            makeGoodFrame.getContentPane().setBackground(Color.black);
 
-            panelInteractionWithNewData = new JPanel();
+            panelInteractionWithNewData = new JPanel(new GridLayout(6, 2, 10, 10));
             panelInteractionWithNewData.setBackground(Color.BLACK);
-            panelInteractionWithNewData.setBorder(BorderFactory.createEmptyBorder(55, 0, 10, 0));
+            panelInteractionWithNewData.setBorder(BorderFactory.createEmptyBorder(45, 10, 10, 10));
             makeGoodFrame.add(panelInteractionWithNewData);
 
             JLabel newLabel = new JLabel("<html> Введіть назву, опис, виробника, кількість<br> на складі й ціну за одиницю товара");
-            newLabel.setForeground(Color.white);
+            newLabel.setForeground(Color.WHITE);
             newLabel.setFont(new Font("Georgia", Font.ITALIC, 18));
             newLabel.setHorizontalAlignment(JLabel.CENTER);
-            panelInteractionWithNewData.add(newLabel);
+            makeGoodFrame.add(newLabel, BorderLayout.NORTH);
 
             JLabel nameLabel = new JLabel("Ім'я:");
             JLabel descriptionLabel = new JLabel("Опис:");
@@ -459,10 +463,9 @@ public class Interaction extends JFrame implements ActionListener {
             panelInteractionWithNewData.add(priceLabel);
             panelInteractionWithNewData.add(priceField);
 
-
             buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 60, 10));
             buttonPanel.setBackground(Color.black);
-            panelInteractionWithNewData.add(buttonPanel, BorderLayout.SOUTH);
+            makeGoodFrame.add(buttonPanel, BorderLayout.SOUTH);
 
             SubmitGood = new JButton("OK");
             buttonPanel.add(SubmitGood);
@@ -470,7 +473,6 @@ public class Interaction extends JFrame implements ActionListener {
 
             makeGoodFrame.setLocationRelativeTo(null);
             makeGoodFrame.setVisible(true);
-
 
         } else if (event.getSource() == SubmitGood) {
             if (indexOfParametr == 0 && !storage.searchForDuplicatesOfGoods(nameField.getText())) {

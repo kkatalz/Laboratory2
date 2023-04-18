@@ -59,8 +59,11 @@ public class Goods {
     }
 
     public String toString(){
-        return "Назва: " + this.name + "Опис: " + this.description + " Виробник: " + this.maker + " Кількість : " + this.amountOnStock +
-                " Ціна : " + this.price;
+        return "Назва: " + this.name + " Опис: " + this.description + " Виробник: " + this.maker + " Кількість : " + this.amountOnStock +
+                " Ціна : " + this.price +" Загальна вартість "+(this.price*this.amountOnStock);
+
     }
+
+
 
 }

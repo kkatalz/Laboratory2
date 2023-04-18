@@ -8,6 +8,7 @@ import java.awt.event.MouseEvent;
 
 public class Tree extends JFrame {
     JPanel panel;
+    DefaultMutableTreeNode goodNode;
 
     public Tree(Storage storage) {
         Group[] groups = storage.getGroups();
@@ -17,12 +18,17 @@ public class Tree extends JFrame {
         for (Group group : groups) {
             DefaultMutableTreeNode groupNode = new DefaultMutableTreeNode(group.getName());
 
+
+            DefaultMutableTreeNode priceOfAllGoods=new DefaultMutableTreeNode(group.getAllPrice());
             for (Goods good : group.getGoods()) {
-                DefaultMutableTreeNode goodNode = new DefaultMutableTreeNode(good.getName());
+                 goodNode = new DefaultMutableTreeNode(good.getName());
                 groupNode.add(goodNode);
+                DefaultMutableTreeNode goodsDetails=new DefaultMutableTreeNode(good.toString());
+                goodNode.add(goodsDetails);
             }
 
             top.add(groupNode);
+            top.add( priceOfAllGoods);
         }
 
         JTree tree = new JTree(top);

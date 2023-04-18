@@ -789,6 +789,13 @@ public class Interaction extends JFrame implements ActionListener {
                 return;
 
             }
+
+            if(!storage.searchForDuplicatesOfGroup(newName)){
+                JOptionPane.showMessageDialog(this, "Неможливо змінити назву групи.");
+                availableDataFrame.setVisible(false);
+                newFrame.setVisible(true);
+                return;
+            }
             boolean marker = false;
             for (int i = 0; i < radioButtonsChooseGroupInEditingGroup.length; i++) {
                 if (radioButtonsChooseGroupInEditingGroup[i].isSelected()) {

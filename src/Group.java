@@ -24,6 +24,15 @@ public class Group {
 
     }
 
+    public String getAllPrice(){
+        double price=0;
+
+        for(Goods good: this.goods){
+            price+=good.getPrice();
+        }
+        return  "Загальна вартість товарів по складу "+ price;
+    }
+
     public String getName(){
         return this.name;
     }
